@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional CV Builder - صانع السير الذاتية</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Merriweather:wght@300;700&family=Roboto:wght@300;400;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --bg-light: #f4f7f6;
+            --white: #ffffff;
+            --text-dark: #333;
+            --text-light: #666;
+            --border-color: #ddd;
+        }
+
+        /* --- Global Reset --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Roboto', sans-serif; background: #eef1f5; height: 100vh; overflow: hidden; }
+
+        /* --- App Layout (Split Screen) --- */
+        .app-container { display: flex; height: 100vh; }
+
+        /* Editor Panel */
+        .editor-panel {
+            width: 400px;
+            background: var(--white);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        .editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .actions button { font-size: 0.8rem; padding: 5px 10px; cursor: pointer; border: none; border-radius: 4px; color: white; }
+        .btn-secondary { background: #7f8c8d; }
+        .btn-danger { background: #e74c3c; }
+
+        /* Tabs */
+        .tabs { display: flex; border-bottom: 2px solid #eee; margin-bottom: 20px; }
+        .tab-btn {
+            flex: 1; padding: 10px; background: none; border: none; cursor: pointer;
+            font-weight: bold; color: #777; transition: 0.3s;
+        }
+        .tab-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
+
+        .tab-pane { display: none; animation: fadeIn 0.3s; }
+        .tab-pane.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Forms */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; font-weight: 500; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;
+            font-family: inherit;
+        }
+
+        /* Template Selector */
+        .template-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .template-card {
+            padding: 15px; border: 2px solid #eee; border-radius: 6px; cursor: pointer;
+            text-align: center; font-size: 0.8rem; transition: 0.3s;
+        }
+        .template-card:hover { border-color: #bdc3c7; }
+        .template-card.active { border-color: var(--primary); background: #f0f8ff; font-weight: bold; }
+
+        /* Dynamic List Items */
+        .item-entry { background: #f9f9f9; padding: 10px; border: 1px solid #eee; margin-bottom: 10px; border-radius: 4px; position: relative; }
+        .btn-remove { position: absolute; top: 5px; right: 5px; color: red; background: none; border: none; cursor: pointer; }
+        .btn-add { width: 100%; padding: 8px; background: #eee; border: 1px dashed #999; cursor: pointer; margin-bottom: 20px; }
+        .btn-primary { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; margin-top: auto; }
+
+        /* Preview Area */
+        .preview-area {
+            flex: 1;
+            background: #525659;
+            padding: 40px;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+        }
+        .preview-wrapper { width: 210mm; /* A4 Width */ }
+
+        /* --- CV CONTAINER BASE --- */
+        .cv-container {
+            background: white;
+            width: 100%;
+            min-height: 297mm; /* A4 Height */
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .cv-photo { width: 120px; height: 120px; object-fit: cover; border-radius: 50%; display: block; }
+
+        /* ================= TEMPLATES ================= */
+
+        /* 1. English Modern (Minimalist) */
+        .cv-container.en-modern { display: grid; grid-template-columns: 30% 70%; font-family: 'Roboto', sans-serif; }
+        .en-modern .left-col { background: var(--bg-light); padding: 30px 20px; color: var(--text-dark); height: 100%; }
+        .en-modern .right-col { padding: 40px 30px; }
+        .en-modern .cv-header { grid-column: 1 / -1; background: var(--primary); color: white; padding: 30px; display: flex; align-items: center; gap: 20px; }
+        .en-modern .header-text h1 { font-size: 2.2rem; margin-bottom: 5px; text-transform: uppercase; }
+        .en-modern .cv-photo { border: 3px solid white; }
+        .en-modern h3 { color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 5px; margin: 20px 0 15px; text-transform: uppercase; font-size: 1rem; }
+        .en-modern .contact-item { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
+        .en-modern .skill-tag { display: inline-block; background: #ddd; padding: 4px 8px; border-radius: 4px; margin: 2px; font-size: 0.85rem; }
+
+        /* 2. English Corporate (Professional) */
+        .cv-container.en-corporate { padding: 40px; font-family: 'Merriweather', serif; color: #1a1a1a; }
+        .en-corporate .cv-header { border-bottom: 2px solid var(--primary); padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        .en-corporate h1 { font-size: 2.5rem; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
+        .en-corporate .job-title { font-size: 1.2rem; color: #555; font-style: italic; }
+        .en-corporate h3 { background: #eee; padding: 8px 15px; margin: 25px 0 15px; font-family: 'Roboto', sans-serif; text-transform: uppercase; font-weight: bold; border-left: 5px solid var(--primary); }
+        .en-corporate .entry { margin-bottom: 15px; }
+        .en-corporate .entry-header { display: flex; justify-content: space-between; font-weight: bold; }
+        .en-corporate .cv-photo { width: 100px; height: 100px; border-radius: 4px; }
+
+        /* 3. Arabic Official (RTL, Traditional) */
+        .cv-container.ar-official { direction: rtl; font-family: 'Amiri', serif; padding: 40px; text-align: right; }
+        .ar-official .cv-header { text-align: center; border-bottom: 1px solid #ccc; padding-bottom: 20px; margin-bottom: 30px; }
+        .ar-official .cv-photo { margin: 0 auto 15px; border-radius: 5px; }
+        .ar-official h1 { color: var(--primary); font-size: 2.4rem; margin-bottom: 5px; }
+        .ar-official h3 { color: var(--primary); border-bottom: 1px solid var(--primary); padding-bottom: 5px; margin: 30px 0 15px; font-size: 1.6rem; }
+        .ar-official .contact-info { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 15px; font-family: 'Tajawal', sans-serif; }
+        .ar-official .entry-title { font-weight: bold; font-size: 1.2rem; }
+        .ar-official .date-span { float: left; color: #666; font-family: 'Tajawal', sans-serif; }
+
+        /* 4. Arabic Creative (RTL, Modern Sidebar) */
+        .cv-container.ar-creative { direction: rtl; font-family: 'Tajawal', sans-serif; display: grid; grid-template-columns: 30% 70%; text-align: right; }
+        .ar-creative .sidebar { background: var(--primary); color: white; padding: 30px 20px; height: 100%; }
+        .ar-creative .main-content { padding: 40px 30px; }
+        .ar-creative .cv-photo { width: 140px; height: 140px; margin: 0 auto 20px; border: 4px solid rgba(255,255,255,0.3); }
+        .ar-creative h1 { color: var(--primary); font-size: 2.5rem; margin-bottom: 5px; }
+        .ar-creative .sidebar h3 { color: rgba(255,255,255,0.8); border-bottom: 1px solid rgba(255,255,255,0.3); margin: 30px 0 15px; padding-bottom: 5px; }
+        .ar-creative .main-content h3 { color: #e67e22; /* Orange Accent */ font-size: 1.5rem; margin: 30px 0 15px; display: flex; align-items: center; gap: 10px; }
+        .ar-creative .contact-row { margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .ar-creative i { width: 20px; text-align: center; }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 900px) {
+            .app-container { flex-direction: column; height: auto; overflow: auto; }
+            .editor-panel { width: 100%; height: auto; border-right: none; border-bottom: 1px solid #ddd; }
+            .preview-area { padding: 20px 10px; }
+            .preview-wrapper { width: 100%; transform: scale(0.6); transform-origin: top center; height: 200mm; }
+            body { overflow: auto; }
+        }
+
+        @media print {
+            body * { visibility: hidden; }
+            #cv-preview, #cv-preview * { visibility: visible; }
+            #cv-preview { position: absolute; left: 0; top: 0; width: 100%; margin: 0; box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <aside class="editor-panel">
+            <div class="editor-header">
+                <h2>CV Builder</h2>
+                <div class="actions">
+                    <button id="loadSampleBtn" class="btn-secondary">Sample Data</button>
+                    <button id="resetBtn" class="btn-danger">Reset</button>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="settings">Templates</button>
+                <button class="tab-btn" data-tab="personal">Personal</button>
+                <button class="tab-btn" data-tab="experience">History</button>
+                <button class="tab-btn" data-tab="skills">Skills</button>
+            </div>
+
+            <div class="tab-content" id="editor-forms">
+                <div class="tab-pane active" id="settings">
+                    <h3>Select Template / اختر القالب</h3>
+                    <div class="template-grid">
+                        <div class="template-card active" data-tmpl="en-modern">
+                            <span>EN: Modern Minimalist</span>
+                        </div>
+                        <div class="template-card" data-tmpl="en-corporate">
+                            <span>EN: Corporate</span>
+                        </div>
+                        <div class="template-card" data-tmpl="ar-official">
+                            <span>AR: Official (الرسمية)</span>
+                        </div>
+                        <div class="template-card" data-tmpl="ar-creative">
+                            <span>AR: Creative (الإبداعية)</span>
+                        </div>
+                    </div>
+
+                    <h3>Customization / تخصيص</h3>
+                    <div class="form-group">
+                        <label>Primary Color / اللون الأساسي</label>
+                        <input type="color" id="primaryColor" value="#2c3e50">
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="personal">
+                    <div class="form-group">
+                        <label>Profile Photo</label>
+                        <input type="file" id="photoInput" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" class="live-input" data-bind="fullName" placeholder="John Doe / الاسم">
+                    </div>
+                    <div class="form-group">
+                        <label>Job Title</label>
+                        <input type="text" class="live-input" data-bind="jobTitle" placeholder="Software Engineer / المسمى الوظيفي">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="live-input" data-bind="email" placeholder="john@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" class="live-input" data-bind="phone" placeholder="+1 234 567 890">
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" class="live-input" data-bind="address" placeholder="New York, USA / العنوان">
+                    </div>
+                    <div class="form-group">
+                        <label>Summary / Objective (ملخص)</label>
+                        <textarea class="live-input" data-bind="summary" rows="4"></textarea>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="experience">
+                    <h3>Work Experience / الخبرة</h3>
+                    <div id="experience-list"></div>
+                    <button class="btn-add" onclick="addItem('experience')">+ Add Job</button>
+
+                    <hr>
+
+                    <h3>Education / التعليم</h3>
+                    <div id="education-list"></div>
+                    <button class="btn-add" onclick="addItem('education')">+ Add Education</button>
+                </div>
+
+                <div class="tab-pane" id="skills">
+                    <h3>Skills / المهارات</h3>
+                    <div class="form-group">
+                        <label>List skills separated by comma</label>
+                        <textarea class="live-input" data-bind="skills" rows="3" placeholder="HTML, CSS, JavaScript..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="export-section">
+                <button id="downloadPdf" class="btn-primary">Download PDF / تحميل الملف</button>
+            </div>
+        </aside>
+
+        <main class="preview-area">
+            <div class="preview-wrapper">
+                <div id="cv-preview" class="cv-container en-modern">
+                    </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- Initial State ---
+        const defaultData = {
+            template: 'en-modern',
+            color: '#2c3e50',
+            personal: {
+                fullName: '',
+                jobTitle: '',
+                email: '',
+                phone: '',
+                address: '',
+                summary: '',
+                photo: null // Base64 string
+            },
+            experience: [],
+            education: [],
+            skills: ''
+        };
+
+        // State Proxy to auto-save and update preview
+        let cvData = JSON.parse(localStorage.getItem('cvData')) || JSON.parse(JSON.stringify(defaultData));
+
+        // --- DOM Elements ---
+        const previewContainer = document.getElementById('cv-preview');
+        const colorInput = document.getElementById('primaryColor');
+        const templateCards = document.querySelectorAll('.template-card');
+        const inputs = document.querySelectorAll('.live-input');
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFormData();
+            renderPreview();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // 1. Template Switching
+            templateCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    document.querySelector('.template-card.active').classList.remove('active');
+                    card.classList.add('active');
+                    cvData.template = card.dataset.tmpl;
+                    saveAndRender();
+                });
+            });
+
+            // 2. Text Input Binding
+            inputs.forEach(input => {
+                input.addEventListener('input', (e) => {
+                    const field = e.target.dataset.bind;
+                    cvData.personal[field] = e.target.value;
+                    saveAndRender();
+                });
+            });
+
+            // 3. Color Picker
+            colorInput.addEventListener('input', (e) => {
+                cvData.color = e.target.value;
+                saveAndRender();
+            });
+
+            // 4. Photo Upload
+            document.getElementById('photoInput').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        cvData.personal.photo = e.target.result;
+                        saveAndRender();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // 5. Tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.getElementById(btn.dataset.tab).classList.add('active');
+                });
+            });
+
+            // 6. PDF Download
+            document.getElementById('downloadPdf').addEventListener('click', generatePDF);
+            
+            // 7. Reset & Sample
+            document.getElementById('resetBtn').addEventListener('click', () => {
+                if(confirm('Clear all data?')) {
+                    cvData = JSON.parse(JSON.stringify(defaultData));
+                    loadFormData();
+                    saveAndRender();
+                }
+            });
+            
+            document.getElementById('loadSampleBtn').addEventListener('click', loadSampleData);
+        }
+
+        // --- List Items Logic (Exp/Edu) ---
+        function addItem(type) {
+            const id = Date.now();
+            const item = { id, title: '', subtitle: '', date: '', desc: '' };
+            cvData[type].push(item);
+            renderListInputs(type);
+            saveAndRender();
+        }
+
+        function removeItem(type, id) {
+            cvData[type] = cvData[type].filter(i => i.id !== id);
+            renderListInputs(type);
+            saveAndRender();
+        }
+
+        function updateItem(type, id, field, value) {
+            const item = cvData[type].find(i => i.id === id);
+            if(item) {
+                item[field] = value;
+                saveAndRender(); // Only update preview
+            }
+        }
+
+        function renderListInputs(type) {
+            const container = document.getElementById(`${type}-list`);
+            container.innerHTML = '';
+            
+            cvData[type].forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'item-entry';
+                div.innerHTML = `
+                    <button class="btn-remove" onclick="removeItem('${type}', ${item.id})"><i class="fas fa-trash"></i></button>
+                    <div class="form-group">
+                        <input type="text" placeholder="${type === 'experience' ? 'Job Title' : 'Degree'}" 
+                            value="${item.title}" oninput="updateItem('${type}', ${item.id}, 'title', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="${type === 'experience' ? 'Company' : 'University'}" 
+                            value="${item.subtitle}" oninput="updateItem('${type}', ${item.id}, 'subtitle', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="Date (e.g. 2020 - Present)" 
+                            value="${item.date}" oninput="updateItem('${type}', ${item.id}, 'date', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <textarea placeholder="Description" rows="2" 
+                            oninput="updateItem('${type}', ${item.id}, 'desc', this.value)">${item.desc}</textarea>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // --- Core Rendering Logic ---
+        function saveAndRender() {
+            localStorage.setItem('cvData', JSON.stringify(cvData));
+            renderPreview();
+        }
+
+        function loadFormData() {
+            // Fill text inputs
+            inputs.forEach(input => {
+                const field = input.dataset.bind;
+                if(cvData.personal[field]) input.value = cvData.personal[field];
+            });
+            // Fill lists
+            renderListInputs('experience');
+            renderListInputs('education');
+            // Set color
+            colorInput.value = cvData.color;
+            // Set template
+            document.querySelector('.template-card.active').classList.remove('active');
+            document.querySelector(`.template-card[data-tmpl="${cvData.template}"]`).classList.add('active');
+        }
+
+        function renderPreview() {
+            // 1. Set Container Class & Color
+            previewContainer.className = `cv-container ${cvData.template}`;
+            previewContainer.style.setProperty('--primary', cvData.color);
+            
+            // 2. Generate HTML based on template
+            const { personal, experience, education, skills } = cvData;
+            const photoHTML = personal.photo ? `<img src="${personal.photo}" class="cv-photo">` : '';
+            const skillsArray = skills.split(',').filter(s => s.trim() !== '');
+            
+            let html = '';
+
+            if (cvData.template === 'en-modern') {
+                html = `
+                    <div class="cv-header">
+                        ${photoHTML}
+                        <div class="header-text">
+                            <h1>${personal.fullName || 'Your Name'}</h1>
+                            <p>${personal.jobTitle || 'Job Title'}</p>
+                        </div>
+                    </div>
+                    <div class="left-col">
+                        <h3>Contact</h3>
+                        <div class="contact-item"><i class="fas fa-envelope"></i> ${personal.email}</div>
+                        <div class="contact-item"><i class="fas fa-phone"></i> ${personal.phone}</div>
+                        <div class="contact-item"><i class="fas fa-map-marker-alt"></i> ${personal.address}</div>
+                        
+                        <h3>Skills</h3>
+                        <div class="skills-wrap">
+                            ${skillsArray.map(s => `<span class="skill-tag">${s.trim()}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="right-col">
+                        <h3>Profile</h3>
+                        <p>${personal.summary}</p>
+                        
+                        <h3>Experience</h3>
+                        ${renderEntries(experience)}
+                        
+                        <h3>Education</h3>
+                        ${renderEntries(education)}
+                    </div>
+                `;
+            } else if (cvData.template === 'en-corporate') {
+                html = `
+                    <div class="cv-header">
+                        <div>
+                            <h1>${personal.fullName || 'Your Name'}</h1>
+                            <div class="job-title">${personal.jobTitle || 'Job Title'}</div>
+                        </div>
+                        ${photoHTML}
+                    </div>
+                    <div class="contact-line" style="margin-bottom:20px; color:#555;">
+                        ${personal.email} | ${personal.phone} | ${personal.address}
+                    </div>
+                    
+                    <h3>Professional Summary</h3>
+                    <p>${personal.summary}</p>
+                    
+                    <h3>Work History</h3>
+                    ${renderEntries(experience)}
+                    
+                    <h3>Education</h3>
+                    ${renderEntries(education)}
+                    
+                    <h3>Skills</h3>
+                    <p>${skills}</p>
+                `;
+            } else if (cvData.template === 'ar-official') {
+                html = `
+                    <div class="cv-header">
+                        ${photoHTML}
+                        <h1>${personal.fullName || 'الاسم الكامل'}</h1>
+                        <p style="font-size:1.2rem">${personal.jobTitle || 'المسمى الوظيفي'}</p>
+                        <div class="contact-info">
+                            <span>${personal.email} <i class="fas fa-envelope"></i></span>
+                            <span>${personal.phone} <i class="fas fa-phone"></i></span>
+                            <span>${personal.address} <i class="fas fa-map-marker-alt"></i></span>
+                        </div>
+                    </div>
+                    
+                    <h3>ملخص الملف الشخصي</h3>
+                    <p>${personal.summary}</p>
+                    
+                    <h3>الخبرات العملية</h3>
+                    ${renderEntries(experience)}
+                    
+                    <h3>المؤهلات العلمية</h3>
+                    ${renderEntries(education)}
+                    
+                    <h3>المهارات</h3>
+                    <p>${skills}</p>
+                `;
+            } else if (cvData.template === 'ar-creative') {
+                html = `
+                    <div class="sidebar">
+                        ${photoHTML}
+                        <h3>اتصل بي</h3>
+                        <div class="contact-row"><i class="fas fa-envelope"></i> ${personal.email}</div>
+                        <div class="contact-row"><i class="fas fa-phone"></i> ${personal.phone}</div>
+                        <div class="contact-row"><i class="fas fa-map-marker-alt"></i> ${personal.address}</div>
+                        
+                        <h3>المهارات</h3>
+                        ${skillsArray.map(s => `<div style="margin-bottom:5px;">• ${s.trim()}</div>`).join('')}
+                    </div>
+                    <div class="main-content">
+                        <h1>${personal.fullName || 'الاسم الكامل'}</h1>
+                        <p style="font-size:1.4rem; color:#777;">${personal.jobTitle || 'المسمى الوظيفي'}</p>
+                        <p style="margin-top:20px;">${personal.summary}</p>
+                        
+                        <h3><i class="fas fa-briefcase"></i> الخبرة العملية</h3>
+                        ${renderEntries(experience)}
+                        
+                        <h3><i class="fas fa-graduation-cap"></i> التعليم</h3>
+                        ${renderEntries(education)}
+                    </div>
+                `;
+            }
+            
+            previewContainer.innerHTML = html;
+        }
+
+        function renderEntries(list) {
+            if (!list.length) return '<p style="color:#999; font-style:italic;">No entries yet...</p>';
+            return list.map(item => `
+                <div class="entry">
+                    <div class="entry-header">
+                        <span class="entry-title">${item.title}</span>
+                        <span class="date-span">${item.date}</span>
+                    </div>
+                    <div style="font-weight:bold; color:var(--text-light); margin-bottom:5px;">${item.subtitle}</div>
+                    <p>${item.desc}</p>
+                </div>
+            `).join('');
+        }
+
+        // --- Utilities ---
+        function generatePDF() {
+            const element = document.getElementById('cv-preview');
+            const opt = {
+                margin: 0,
+                filename: 'my-resume.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 }, // Higher scale for better quality
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+
+        function loadSampleData() {
+            cvData = {
+                template: 'en-modern',
+                color: '#2980b9',
+                personal: {
+                    fullName: 'Sarah Jenkins',
+                    jobTitle: 'Senior Marketing Manager',
+                    email: 'sarah.j@example.com',
+                    phone: '+1 555 0192',
+                    address: 'San Francisco, CA',
+                    summary: 'Creative marketing professional with 7+ years of experience in digital strategy and brand management.',
+                    photo: null
+                },
+                experience: [
+                    { id: 1, title: 'Marketing Lead', subtitle: 'Tech Solutions Inc', date: '2020 - Present', desc: 'Led a team of 5 to increase brand awareness by 40%.' },
+                    { id: 2, title: 'Content Specialist', subtitle: 'Creative Agency', date: '2017 - 2020', desc: 'Managed social media campaigns for Fortune 500 clients.' }
+                ],
+                education: [
+                    { id: 3, title: 'MBA Marketing', subtitle: 'Stanford University', date: '2016', desc: 'Graduated with Honors.' }
+                ],
+                skills: 'SEO, Content Strategy, Google Analytics, Team Leadership, Adobe Creative Suite'
+            };
+            loadFormData();
+            saveAndRender();
+        }
+    </script>
+</body>
+</html>
+
