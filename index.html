@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CV Pro - صانع السيرة الذاتية الاحترافي</title>
+    <title>CV Pro - Professional Resume Builder</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Tajawal:wght@300;400;500;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Tajawal:wght@300;400;500;700;800&family=Playfair+Display:wght@700&family=Roboto:wght@400;700&family=Merriweather:wght@400;700&family=Cairo:wght@400;700&family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            /* Light Theme */
+            /* Theme Configuration */
             --primary: #2563eb;
             --primary-dark: #1e40af;
             --bg-editor: #f8fafc;
@@ -19,6 +19,12 @@
             --text-muted: #64748b;
             --border: #e2e8f0;
             --sidebar-width: 420px;
+            
+            /* CV Font Configuration - Default English (Inter) */
+            --cv-font-body: 'Inter', sans-serif;
+            --cv-font-head: 'Inter', sans-serif;
+            --cv-font-size-base: 15px;
+            --theme-color: var(--primary); /* Added theme-color variable here */
         }
 
         /* Dark Mode Configuration */
@@ -35,79 +41,20 @@
         /* --- Global Reset --- */
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
         body { 
-            font-family: 'Tajawal', 'Inter', sans-serif; 
-            background: #525659; /* خلفية داكنة للتركيز على الورقة */
+            font-family: 'Inter', 'Tajawal', sans-serif; 
+            background: #525659;
             height: 100vh; 
             overflow: hidden; 
             color: var(--text-main);
-            transition: background 0.3s, color 0.3s; /* Smooth transition for dark mode */
+            transition: background 0.3s, color 0.3s;
         }
 
-        /* --- Dark Mode Styles --- */
-        .dark-mode body {
-            background: #222;
-        }
-        .dark-mode .editor-sidebar {
-            box-shadow: -4px 0 20px rgba(0,0,0,0.5);
-        }
-        .dark-mode .sidebar-header {
-            background: var(--bg-panel);
-        }
-        .dark-mode .btn-ghost { 
-            background: #4b5563; 
-            color: var(--text-muted); 
-        }
-        .dark-mode .btn-ghost:hover { 
-            background: #6b7280; 
-            color: var(--text-main); 
-        }
-        .dark-mode .tabs-nav { 
-            background: #4b5563; 
-        }
-        .dark-mode .tab-btn.active { 
-            background: var(--bg-panel); 
-            color: var(--primary); 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-        .dark-mode .input-control { 
-            background: #4b5563; 
-            border-color: #6b7280;
-            color: var(--text-main);
-        }
-        .dark-mode .input-control:focus { 
-            border-color: var(--primary); 
-            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
-        }
-        .dark-mode .list-item { 
-            background: #4b5563; 
-            border-color: #6b7280;
-        }
-        .dark-mode .remove-item {
-            background: var(--bg-panel);
-            border-color: #fca5a5;
-        }
-        .dark-mode .btn-add-item {
-            border-color: #6b7280;
-            color: var(--text-muted);
-        }
-        .dark-mode .btn-add-item:hover { 
-            border-color: var(--primary); 
-            color: var(--primary); 
-            background: #374151;
-        }
-        .dark-mode .sidebar-header + div {
-            border-top-color: var(--border);
-        }
-        .dark-mode .toggle-header {
-            background: #4b5563;
-        }
-        .dark-mode .toggle-content {
-            background: #4b5563;
-        }
-        /* --- Layout --- */
+        /* RTL Specific Adjustments */
+        [dir="rtl"] body { font-family: 'Tajawal', 'Inter', sans-serif; }
+        [dir="rtl"] .editor-sidebar { border-right: 1px solid var(--border); border-left: none; box-shadow: 4px 0 20px rgba(0,0,0,0.05); }
+
+        /* --- Layout & Responsiveness --- */
         .app-container { display: flex; height: 100vh; }
-
-        /* --- Editor Sidebar (Right Side) --- */
         .editor-sidebar {
             width: var(--sidebar-width);
             background: var(--bg-panel);
@@ -117,277 +64,235 @@
             z-index: 20;
             box-shadow: -4px 0 20px rgba(0,0,0,0.05);
             height: 100vh;
-            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+            transition: all 0.3s;
         }
-
-        .sidebar-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--bg-panel);
-            transition: background 0.3s, border-color 0.3s;
-        }
-
-        .logo { font-weight: 800; font-size: 1.2rem; color: var(--primary); display: flex; align-items: center; gap: 10px; }
-        
-        .action-btns { display: flex; gap: 8px; }
-        .btn { border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-family: inherit; transition: 0.2s; font-weight: 500; }
-        .btn-ghost { background: #f1f5f9; color: var(--text-muted); }
-        .btn-ghost:hover { background: #e2e8f0; color: var(--text-main); }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-download { background: #10b981; color: white; width: 100%; padding: 14px; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; border: none; border-radius: 6px;}
-        .btn-download:hover { background: #059669; }
-        
-        /* New: Settings Button - Removed as separate button */
-        /* .btn-settings { width: 38px; padding: 8px; } */
-
-
-        .sidebar-content { flex: 1; overflow-y: auto; padding: 20px; }
-
-        /* Tabs Navigation */
-        .tabs-nav { display: flex; background: #f1f5f9; padding: 4px; border-radius: 8px; margin-bottom: 25px; }
-        .tab-btn { flex: 1; padding: 8px; text-align: center; cursor: pointer; border-radius: 6px; font-size: 0.85rem; color: var(--text-muted); transition: 0.2s; white-space: nowrap; }
-        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-weight: bold; }
-
-        /* Forms */
-        .section-title { font-size: 1rem; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 6px; font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
-        .input-control { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 0.9rem; transition: 0.2s; background: #fff; }
-        .input-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
-        textarea.input-control { resize: vertical; min-height: 80px; }
-        
-        /* Settings Toggle Group */
-        .setting-toggle-group {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border);
-        }
-        .setting-toggle-group:last-of-type { border-bottom: none; }
-        
-        .switch { position: relative; display: inline-block; width: 48px; height: 28px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.4s; border-radius: 28px; }
-        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: 0.4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--primary); }
-        input:checked + .slider:before { transform: translateX(20px); }
-
-        /* NEW: About Section as Toggle/Accordion */
-        .about-toggle {
-            margin-top: 25px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .toggle-header {
-            padding: 15px;
-            background: var(--bg-editor);
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.2s;
-        }
-        .toggle-header:hover {
-            background: var(--border);
-        }
-        .toggle-header i {
-            transition: transform 0.3s;
-        }
-        .toggle-header.open i {
-            transform: rotate(180deg);
-        }
-        .toggle-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease-in-out, padding 0.3s;
-            background: var(--bg-editor);
-            padding: 0 15px;
-        }
-        .toggle-content.open {
-            max-height: 500px; /* Large enough for content */
-            padding: 15px;
-            border-top: 1px solid var(--border);
-        }
-        .about-text-content {
-            font-size: 0.9rem;
-            line-height: 1.7;
-            text-align: center;
-            color: var(--text-muted);
-        }
-        .about-text-content p {
-            margin-bottom: 10px;
-        }
-        .about-text-content h4 {
-            font-size: 1rem;
-            color: var(--text-main);
-            margin-bottom: 8px;
-        }
-
-        /* Template Grid */
-        .template-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .tmpl-card { border: 2px solid var(--border); border-radius: 8px; overflow: hidden; cursor: pointer; transition: 0.2s; }
-        .tmpl-card img { width: 100%; height: 80px; object-fit: cover; background: #eee; display: block; }
-        .tmpl-card .name { padding: 8px; font-size: 0.8rem; text-align: center; font-weight: 600; background: #fff; }
-        .tmpl-card.active { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2); }
-        .tmpl-card.active .name { color: var(--primary); }
-        .dark-mode .tmpl-card .name { background: var(--bg-panel); }
-
-        /* List Items */
-        .list-item { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 12px; position: relative; }
-        .remove-item { position: absolute; top: 10px; left: 10px; color: #ef4444; cursor: pointer; background: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #fee2e2; }
-        .btn-add-item { width: 100%; padding: 12px; border: 2px dashed #cbd5e1; background: transparent; border-radius: 8px; color: var(--text-muted); cursor: pointer; font-weight: 600; }
-        .btn-add-item:hover { border-color: var(--primary); color: var(--primary); background: #eff6ff; }
-
-        /* --- Preview Area (Left Side) --- */
         .preview-area {
-            flex: 1;
+            flex-grow: 1;
             overflow: auto;
             display: flex;
             justify-content: center;
-            padding: 40px 20px;
+            align-items: flex-start;
+            padding: 20px;
             background: #525659;
+            position: relative; /* Needed for loader */
+        }
+        
+        /* Sidebar Components */
+        .sidebar-header { padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg-panel); }
+        .logo { font-size: 1.2rem; font-weight: bold; color: var(--primary); }
+        .action-btns { display: flex; gap: 8px; }
+        .btn { border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-family: inherit; transition: 0.2s; font-weight: 500; }
+        .btn-download { background: var(--primary); color: white; width: 100%; padding: 12px; font-size: 1rem; }
+        .btn-ghost { background: transparent; color: var(--text-muted); padding: 8px; }
+        .btn-ghost:hover { background: var(--bg-editor); color: var(--primary); }
+        .sidebar-content { flex: 1; overflow-y: auto; padding: 20px; }
+        .tabs-nav { display: flex; background: var(--bg-editor); padding: 4px; border-radius: 8px; margin-bottom: 25px; }
+        .tab-btn { flex: 1; padding: 8px; text-align: center; cursor: pointer; border-radius: 6px; font-size: 0.8rem; color: var(--text-muted); transition: 0.2s; white-space: nowrap; }
+        .tab-btn.active { background: var(--bg-panel); color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-weight: bold; }
+
+        /* Form & List Styles */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 6px; font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+        .input-control { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 0.9rem; transition: 0.2s; background: var(--bg-panel); color: var(--text-main); }
+        .input-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+        .list-item { background: var(--bg-editor); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 12px; position: relative; }
+        .btn-add-item { width: 100%; padding: 10px; background: var(--bg-editor); border: 1px dashed var(--border); border-radius: 6px; color: var(--primary); cursor: pointer; transition: 0.2s; margin-top: 10px; }
+        .btn-add-item:hover { background: var(--border); }
+        
+        .remove-item { position: absolute; top: 10px; right: 10px; color: #ef4444; cursor: pointer; background: var(--bg-panel); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #fee2e2; z-index: 10; }
+        [dir="rtl"] .remove-item { left: 10px; right: auto; }
+        .reorder-btns { position: absolute; top: 10px; left: 10px; display: flex; gap: 5px; }
+        [dir="rtl"] .reorder-btns { right: 10px; left: auto; }
+        .reorder-btns button { background: var(--border); border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; color: var(--text-muted); font-size: 0.7rem; transition: 0.2s; }
+        
+        /* NEW: Photo Upload/Removal Group */
+        .photo-upload-group { display: flex; gap: 10px; align-items: flex-end; }
+        .photo-upload-group .input-control { flex-grow: 1; }
+        .btn-remove-photo { 
+            background: #ef4444; 
+            color: white; 
+            padding: 10px 12px; 
+            border-radius: 6px;
+            cursor: pointer;
+            width: auto;
+            white-space: nowrap;
         }
 
-        /* ================================================================
-           CRITICAL: PAPER DIMENSIONS & PRINT SETTINGS
-           ================================================================
-        */
+        /* NEW: Template Card Enhancement */
+        .template-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 15px; }
+        .tmpl-card { 
+            border: 2px solid var(--border); 
+            border-radius: 8px; 
+            cursor: pointer; 
+            transition: all 0.2s;
+            overflow: hidden;
+        }
+        .tmpl-card:hover { border-color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .tmpl-card.active { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3); }
+        .tmpl-card .preview-mock { height: 100px; }
+        .tmpl-card .name { padding: 10px; text-align: center; font-size: 0.9rem; font-weight: 500; background: var(--bg-editor); }
+        
+        /* CV Preview Styles */
         .cv-paper {
             background: white;
-            /* A4 Standard Dimensions */
             width: 210mm;
             min-height: 297mm;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             position: relative;
+            margin: 0; 
+        }
+        .cv-content { 
+            height: 100%; 
+            color: #333; 
+            line-height: 1.5; 
+            font-size: var(--cv-font-size-base); 
+            font-family: var(--cv-font-body);
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+        .cv-content.loading { opacity: 0.5; } /* NEW: Loader State */
+        .cv-content h1, .cv-content h2, .cv-content h3, .cv-content h4 { 
+            font-family: var(--cv-font-head);
+            line-height: 1.2;
         }
 
-        /* Print Styles - The Fix for Full Page */
-        @media print {
-            @page {
-                margin: 0; /* Important: Kill browser margins */
-                size: A4;  /* Explicitly tell printer it's A4 */
-            }
-            
-            body, html {
-                margin: 0;
-                padding: 0;
+        /* Mobile View Toggle (Floating Button) */
+        .mobile-preview-toggle {
+            display: none; 
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+        }
+        
+        /* NEW: Accordion Styles */
+        .accordion-item { margin-bottom: 20px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        .accordion-header { padding: 15px; background: var(--bg-editor); font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; color: var(--text-main); }
+        .accordion-header:hover { background: var(--border); }
+        .accordion-header i.fa-chevron-down { transition: transform 0.3s; }
+        .accordion-header.open i.fa-chevron-down { transform: rotate(180deg); }
+        .accordion-content { padding: 0 15px; max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out, padding 0.4s; }
+        .accordion-content.open { max-height: 1000px; padding: 15px; } 
+
+        /* --- Media Queries for Mobile Responsiveness --- */
+        @media (max-width: 900px) {
+            .app-container { flex-direction: column; }
+            .editor-sidebar {
                 width: 100%;
-                background: white;
+                height: 100%;
+                border-left: none;
+                border-right: none;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+            .preview-area {
+                display: none; 
+                width: 100%;
+                padding: 10px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                background: #525659;
+                z-index: 50;
                 height: 100%;
             }
-
-            .app-container { display: block; height: auto; }
-            .editor-sidebar { display: none !important; }
-            .preview-area { 
-                padding: 0; 
-                margin: 0; 
-                overflow: visible; 
-                display: block; 
-                background: white; 
-                height: auto;
-            }
-
             .cv-paper {
-                width: 100%; /* Fill the print width */
-                max-width: 210mm; /* Ensure it doesn't overflow horizontally */
-                min-height: 297mm; /* Full height */
-                margin: 0 auto;
+                width: 100%; 
+                min-height: auto;
                 box-shadow: none;
-                border: none;
-                /* Force Print Colors */
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                page-break-after: always;
             }
-
-            /* Adjust internal padding for print to ensure content isn't cut off */
-            .tmpl-modern .sidebar-col { padding: 25px !important; }
-            .tmpl-modern .main-col { padding: 30px !important; }
-            .tmpl-classic { padding: 40px !important; }
-            .tmpl-creative .cv-content { padding: 30px !important; }
+            .mobile-preview-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .sidebar-hidden .editor-sidebar { display: none; }
+            .sidebar-hidden .preview-area { display: flex; }
+            .tab-btn { font-size: 0.75rem; padding: 6px; }
         }
-
-        /* ================== TEMPLATES STYLES (No change here) ================== */
         
-        /* تم تعديل حجم الخط الأساسي ليكون 15px */
-        .cv-content { height: 100%; color: #333; line-height: 1.5; font-size: 15px; } 
+        /* --- CV Template Specific Styles for Print/Output --- */
         
-        /* 1. Modern Clean */
+        /* (Template styles are unchanged from previous version, kept for brevity) */
         .tmpl-modern .cv-content { display: grid; grid-template-columns: 32% 68%; min-height: 297mm; }
         .tmpl-modern .sidebar-col { background: var(--theme-color); color: white; padding: 30px; }
-        .tmpl-modern[dir="rtl"] .sidebar-col { text-align: right; }
-        .tmpl-modern .main-col { padding: 40px 35px; background: white; }
-        
-        .tmpl-modern .profile-img { width: 140px; height: 140px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.2); margin-bottom: 25px; display: block; object-fit: cover; }
+        .tmpl-modern .main-col { padding: 30px; }
+        .tmpl-modern h1 { font-size: 2rem; margin-bottom: 5px; }
+        .tmpl-modern .job-title { font-size: 1.2rem; margin-bottom: 20px; font-weight: 300; }
         .tmpl-modern h2 { font-size: 1.1rem; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 8px; margin: 25px 0 15px; letter-spacing: 1px; }
-        .tmpl-modern .contact-info div { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; word-break: break-word; }
-        
-        .tmpl-modern .main-header { margin-bottom: 30px; border-bottom: 2px solid #f1f1f1; padding-bottom: 20px; }
-        /* تم تعديل حجم الخط الرئيسي H1 */
-        .tmpl-modern h1 { font-size: 2.8rem; text-transform: uppercase; color: #222; margin-bottom: 5px; line-height: 1.1; font-weight: 800; }
-        .tmpl-modern .job-title { font-size: 1.2rem; color: var(--theme-color); font-weight: 600; letter-spacing: 1px; }
-        
-        /* تم تعديل حجم خط العناوين الفرعية */
-        .tmpl-modern .section-head { font-size: 1.4rem; color: var(--theme-color); border-bottom: 2px solid #eee; padding-bottom: 8px; margin: 25px 0 15px; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
-        .tmpl-modern .entry { margin-bottom: 18px; }
-        .tmpl-modern .entry-title { font-weight: 700; font-size: 1.1rem; color: #1f2937; }
-        .tmpl-modern .entry-sub { font-weight: 600; color: #555; font-size: 0.95rem; margin-bottom: 4px; display: flex; justify-content: space-between; }
-        .tmpl-modern p { color: #4b5563; font-size: 0.95rem; text-align: justify; }
+        .tmpl-modern .section-head { font-size: 1.3rem; font-weight: 700; margin: 30px 0 15px; padding-bottom: 5px; border-bottom: 2px solid #ccc; color: #222; }
+        .tmpl-modern .entry-title { font-weight: 600; font-size: 1.1rem; margin: 5px 0; }
+        .tmpl-modern .entry-sub { display: flex; justify-content: space-between; font-size: 0.9rem; color: #555; font-style: italic; }
 
-        /* 2. Professional Classic */
-        .tmpl-classic { padding: 45px 50px; }
-        .tmpl-classic .header { text-align: center; margin-bottom: 25px; border-bottom: 1px solid #ddd; padding-bottom: 25px; }
-        /* تم تعديل حجم خط H1 */
-        .tmpl-classic h1 { font-family: 'Playfair Display', serif; font-size: 3.2rem; color: var(--theme-color); margin-bottom: 5px; }
-        .tmpl-classic .job-title { font-size: 1.2rem; color: #555; margin-bottom: 12px; letter-spacing: 1px; text-transform: uppercase; }
-        .tmpl-classic .contacts { display: flex; justify-content: center; gap: 15px; color: #666; font-size: 0.9rem; flex-wrap: wrap; }
-        
-        .tmpl-classic h3 { font-size: 1.2rem; text-transform: uppercase; border-bottom: 2px solid var(--theme-color); padding-bottom: 5px; margin: 20px 0 15px; color: var(--theme-color); letter-spacing: 1px; }
-        .tmpl-classic .entry { display: grid; grid-template-columns: 140px 1fr; gap: 20px; margin-bottom: 20px; }
-        .tmpl-classic .date-col { font-weight: 600; color: #777; font-size: 0.9rem; text-align: right; padding-top: 2px; }
-        .tmpl-classic[dir="ltr"] .date-col { text-align: right; }
-        .tmpl-classic[dir="rtl"] .date-col { text-align: left; }
-        
-        .tmpl-classic .main-col h4 { font-size: 1.1rem; font-weight: 700; margin-bottom: 2px; color: #111; }
-        .tmpl-classic .main-col .sub { font-style: italic; color: #555; margin-bottom: 6px; font-size: 0.95rem; }
+        .tmpl-professional .header { text-align: center; padding: 20px 40px 10px; border-bottom: 4px solid var(--theme-color); }
+        .tmpl-professional h1 { font-size: 2.2rem; margin-bottom: 5px; }
+        .tmpl-professional .job-title { font-size: 1.2rem; margin-bottom: 10px; color: #555; }
+        .tmpl-professional .contacts span { margin: 0 10px; font-size: 0.9rem; color: #555; }
+        .tmpl-professional .section-head { font-size: 1.3rem; font-weight: 700; margin: 30px 0 15px; padding-bottom: 5px; border-bottom: 3px solid var(--theme-color); color: #222; }
+        .tmpl-professional .cv-content { padding: 0 40px 40px; }
+        .tmpl-professional .skill-tag { display: inline-block; background: #eee; padding: 5px 10px; border-radius: 4px; margin: 4px; font-size: 0.9rem; border: 1px solid #ddd; }
+        .tmpl-professional .entry-sub { display: flex; justify-content: space-between; font-size: 0.9rem; color: #555; }
 
-        /* 3. Creative */
-        .tmpl-creative .cv-content { padding: 40px; border-top: 15px solid var(--theme-color); background: white; min-height: 297mm; }
-        .tmpl-creative .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
-        /* تم تعديل حجم خط H1 */
-        .tmpl-creative h1 { font-size: 3.4rem; line-height: 1; margin-bottom: 10px; color: #111; font-weight: 800; }
-        .tmpl-creative .job-title { font-size: 1.3rem; background: var(--theme-color); color: white; display: inline-block; padding: 6px 16px; transform: skew(-10deg); }
-        .tmpl-creative .contacts { text-align: right; font-size: 0.9rem; line-height: 1.8; color: #444; }
-        .tmpl-creative[dir="rtl"] .contacts { text-align: left; }
-        
-        .tmpl-creative .grid-layout { display: grid; grid-template-columns: 68% 28%; gap: 4%; }
-        /* تم تعديل حجم خط العناوين الفرعية */
-        .tmpl-creative h3 { font-size: 1.4rem; font-weight: 800; margin: 0 0 20px; text-transform: uppercase; letter-spacing: 1px; position: relative; display: inline-block; color: #333; }
-        .tmpl-creative h3::after { content: ''; position: absolute; width: 100%; height: 4px; background: var(--theme-color); bottom: -6px; left: 0; opacity: 0.4; }
-        
-        .skill-bar { margin-bottom: 12px; }
-        .skill-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 4px; }
-        .bar-bg { background: #eee; height: 6px; width: 100%; border-radius: 3px; }
-        .bar-fill { background: var(--theme-color); height: 100%; border-radius: 3px; width: 85%; }
+        .tmpl-classic .header { padding: 20px 40px; text-align: center; }
+        .tmpl-classic .cv-content { padding: 0 40px 40px; }
+        .tmpl-classic h3 { font-size: 1.5rem; margin-top: 25px; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 2px solid var(--theme-color); color: var(--theme-color); }
+        .tmpl-classic .entry { display: grid; grid-template-columns: 20% 80%; margin-bottom: 15px; }
+        .tmpl-classic .date-col { font-weight: 600; font-size: 0.95rem; color: #555; }
+        .tmpl-classic .main-col h4 { font-size: 1.1rem; margin-bottom: 2px; }
+        .tmpl-classic .main-col .sub { font-style: italic; color: #777; margin-bottom: 5px; font-size: 0.95rem; }
 
-        /* Mobile Responsive */
-        @media (max-width: 900px) {
-            .app-container { flex-direction: column-reverse; }
-            .editor-sidebar { width: 100%; height: 50vh; border-left: none; border-top: 1px solid var(--border); }
-            .preview-area { height: 50vh; align-items: flex-start; padding: 10px; }
+        .tmpl-creative .header { display: flex; justify-content: space-between; align-items: center; padding: 30px 40px; border-top: 10px solid var(--theme-color); border-bottom: 1px solid #ccc; }
+        .tmpl-creative .grid-layout { display: grid; grid-template-columns: 70% 30%; padding: 20px 40px; gap: 30px; }
+        .tmpl-creative h3 { font-size: 1.3rem; margin-top: 20px; margin-bottom: 10px; color: var(--theme-color); }
+        .tmpl-creative .side-bar { background: #f8f8f8; padding: 20px; border-radius: 8px; }
+        .tmpl-creative .skill-bar { margin-bottom: 10px; }
+        .tmpl-creative .skill-name { font-size: 0.9rem; font-weight: 500; margin-bottom: 3px; }
+        .tmpl-creative .bar-bg { background: #ddd; height: 6px; border-radius: 3px; overflow: hidden; }
+        .tmpl-creative .bar-fill { height: 100%; background: var(--theme-color); }
+
+        /* --- Print/PDF Output Optimization --- */
+        @media print {
+            @page { margin: 0; size: A4; }
+            body, html { margin: 0; padding: 0; width: 100%; background: white; height: auto; overflow: visible; }
+            
+            .editor-sidebar, .mobile-preview-toggle { display: none !important; }
+            .app-container { display: block !important; height: auto !important; }
+            .preview-area { padding: 0 !important; margin: 0 !important; overflow: visible !important; display: block !important; background: white !important; height: auto !important; position: relative !important; }
+            
             .cv-paper { 
-                /* تم إزالة transform: scale(0.5); */
-                width: 100%;
-                max-width: 210mm;
-                margin: 0 auto;
-                transform-origin: top center; 
-                margin-bottom: 0; 
+                width: 210mm !important; 
+                min-height: 297mm !important; 
+                margin: 0 auto !important; 
+                box-shadow: none !important; 
+                border: none !important; 
+                
+                -webkit-print-color-adjust: exact !important; 
+                print-color-adjust: exact !important; 
+            }
+            .tmpl-modern .cv-content { 
+                grid-template-columns: 32% 68% !important; 
+                page-break-inside: avoid; 
+            }
+            .tmpl-modern .sidebar-col { 
+                background: var(--theme-color) !important; 
+                color: white !important; 
+            }
+            .tmpl-classic .entry { 
+                grid-template-columns: 20% 80% !important; 
+                page-break-inside: avoid; 
+            }
+            .tmpl-creative .grid-layout { 
+                grid-template-columns: 70% 30% !important; 
+                page-break-inside: avoid; 
             }
         }
     </style>
@@ -396,345 +301,431 @@
 
     <div class="app-container">
         
-        <main class="preview-area">
-            <div id="cv-paper" class="cv-paper tmpl-modern" dir="rtl">
-                </div>
+        <main class="preview-area" id="preview-area">
+            <div id="cv-paper" class="cv-paper tmpl-modern" dir="ltr">
+                <div id="cv-content-loader" class="cv-content loading"></div>
+            </div>
         </main>
 
-        <aside class="editor-sidebar">
+        <aside class="editor-sidebar" id="editor-sidebar">
             <div class="sidebar-header">
                 <div class="logo"><i class="fas fa-file-signature"></i> CV Pro</div>
                 <div class="action-btns">
-                    <button class="btn btn-ghost" onclick="resetData()" title="مسح البيانات"><i class="fas fa-trash-alt"></i></button>
-                    <button class="btn btn-ghost" onclick="loadSample()" title="مثال جاهز"><i class="fas fa-magic"></i></button>
+                    <button class="btn btn-ghost" onclick="resetData()" title="Clear Data"><i class="fas fa-trash-alt"></i></button>
+                    <button class="btn btn-ghost" onclick="loadSample()" title="Load Sample"><i class="fas fa-magic"></i></button>
                 </div>
             </div>
 
             <div class="sidebar-content">
                 <div class="tabs-nav">
-                    <div class="tab-btn active" onclick="switchTab('design')">التصميم</div>
-                    <div class="tab-btn" onclick="switchTab('info')">البيانات</div>
-                    <div class="tab-btn" onclick="switchTab('exp')">الخبرات</div>
-                    <div class="tab-btn" onclick="switchTab('skills')">المهارات</div>
-                    <div class="tab-btn" onclick="switchTab('settings')">الإعدادات</div>
+                    <div class="tab-btn active" onclick="switchTab('design')">Design</div>
+                    <div class="tab-btn" onclick="switchTab('info')">Personal Info</div>
+                    <div class="tab-btn" onclick="switchTab('exp')">Experience & Ed.</div>
+                    <div class="tab-btn" onclick="switchTab('skills')">Skills</div>
+                    <div class="tab-btn" onclick="switchTab('extras')">Extras</div>
+                    <div class="tab-btn" onclick="switchTab('settings')">Settings</div>
                 </div>
 
                 <div id="tab-design" class="tab-pane">
                     <div class="form-group">
-                        <label id="label-color">لون القالب / Theme Color</label>
+                        <label id="label-color">Theme Color</label>
                         <input type="color" class="input-control" value="#2563eb" style="height: 45px; padding: 5px;" oninput="updateConfig('color', this.value)">
                     </div>
+                    
+                    <div class="section-title" style="margin-top:25px;"><i class="fas fa-grip"></i> <span id="label-template">Select Template</span></div>
+                    <div class="template-grid">
+                        <div class="tmpl-card active" onclick="setTemplate('tmpl-modern')" id="card-tmpl-modern">
+                            <div class="preview-mock" style="background:linear-gradient(135deg, var(--theme-color) 30%, #f1f5f9 30%);"></div>
+                            <div class="name" id="name-modern">Modern</div>
+                        </div>
+                        <div class="tmpl-card" onclick="setTemplate('tmpl-classic')" id="card-tmpl-classic">
+                            <div class="preview-mock" style="background:#fff; border-bottom:4px solid var(--theme-color); display:flex; justify-content:center; align-items:center; font-family:serif; font-weight:bold; font-size:20px;">CV</div>
+                            <div class="name" id="name-classic">Classic</div>
+                        </div>
+                        <div class="tmpl-card" onclick="setTemplate('tmpl-creative')" id="card-tmpl-creative">
+                            <div class="preview-mock" style="background:white; border-top:10px solid var(--theme-color); display:flex; align-items:center; padding:10px;">
+                                <div style="width:20px; height:20px; background:var(--theme-color); border-radius:50%;"></div>
+                            </div>
+                            <div class="name" id="name-creative">Creative</div>
+                        </div>
+                         <div class="tmpl-card" onclick="setTemplate('tmpl-professional')" id="card-tmpl-professional">
+                            <div class="preview-mock" style="background:#fff; border-bottom:3px solid var(--theme-color); display:flex; justify-content:center; align-items:center; font-family:sans-serif; font-weight:bold; font-size:16px;">Professional</div>
+                            <div class="name" id="name-professional">Professional</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-title" style="margin-top:25px;"><i class="fas fa-font"></i> <span id="label-font-settings">Font Settings</span></div>
+                    <div class="font-selector-group">
+                        <div class="form-group">
+                            <label id="label-font-head">Heading Font</label>
+                            <select class="input-control" data-config-key="fontHead" onchange="updateConfig(this.dataset.configKey, this.value)">
+                                <option value="Inter">Inter (Default)</option>
+                                <option value="Roboto">Roboto</option>
+                                <option value="Merriweather">Merriweather</option>
+                                <option value="Tajawal">Tajawal (Arabic)</option>
+                                <option value="Cairo">Cairo (Arabic)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label id="label-font-body">Body Font</label>
+                            <select class="input-control" data-config-key="fontBody" onchange="updateConfig(this.dataset.configKey, this.value)">
+                                <option value="Inter">Inter (Default)</option>
+                                <option value="Roboto">Roboto</option>
+                                <option value="Merriweather">Merriweather</option>
+                                <option value="Tajawal">Tajawal (Arabic)</option>
+                                <option value="Noto Kufi Arabic">Noto Kufi Arabic</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="form-group">
-                        <label id="label-template">اختر القالب / Select Template</label>
-                        <div class="template-grid">
-                            <div class="tmpl-card active" onclick="setTemplate('tmpl-modern')" id="card-tmpl-modern">
-                                <div style="height:80px; background:linear-gradient(135deg, #2563eb 30%, #fff 30%);"></div>
-                                <div class="name" id="name-modern">عصري / Modern</div>
-                            </div>
-                            <div class="tmpl-card" onclick="setTemplate('tmpl-classic')" id="card-tmpl-classic">
-                                <div style="height:80px; background:#fff; border-bottom:4px solid #333; display:flex; justify-content:center; align-items:center; font-family:serif; font-weight:bold; font-size:20px;">CV</div>
-                                <div class="name" id="name-classic">كلاسيكي / Classic</div>
-                            </div>
-                            <div class="tmpl-card" onclick="setTemplate('tmpl-creative')" id="card-tmpl-creative">
-                                <div style="height:80px; background:white; border-top:10px solid #e11d48; display:flex; align-items:center; padding:10px;">
-                                    <div style="width:20px; height:20px; background:#e11d48; border-radius:50%;"></div>
-                                </div>
-                                <div class="name" id="name-creative">إبداعي / Creative</div>
-                            </div>
+                        <label id="label-font-size">Base Font Size (px)</label>
+                        <div class="font-size-group">
+                            <input type="number" class="input-control" data-config-key="fontSize" value="15" min="12" max="18" oninput="updateConfig(this.dataset.configKey, this.value)">
                         </div>
                     </div>
                 </div>
 
                 <div id="tab-info" class="tab-pane" style="display:none;">
-                    <div class="form-group">
-                        <label id="label-photo">الصورة الشخصية</label>
-                        <input type="file" class="input-control" accept="image/*" onchange="handleImageUpload(this)">
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header open" onclick="toggleAccordion(this)">
+                            <span id="accordion-personal-title"><i class="fas fa-user"></i> Personal Information</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content open">
+                             <div class="form-group">
+                                <label id="label-photo">Profile Photo</label>
+                                <div class="photo-upload-group">
+                                    <input type="file" class="input-control" id="photo-file-input" accept="image/*" onchange="handleImageUpload(this)">
+                                    <button class="btn btn-remove-photo" id="btn-remove-photo" onclick="removePhoto()" style="display:none;"><i class="fas fa-times"></i></button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label id="label-name">Full Name</label>
+                                <input type="text" class="input-control" data-model="name" placeholder="John Doe..." oninput="updateData(this)">
+                            </div>
+                            <div class="form-group">
+                                <label id="label-jobTitle">Job Title</label>
+                                <input type="text" class="input-control" data-model="jobTitle" placeholder="Software Engineer..." oninput="updateData(this)">
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label id="label-name">الاسم الكامل</label>
-                        <input type="text" class="input-control" data-model="name" placeholder="أحمد محمد..." oninput="updateData(this)">
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <span id="accordion-contact-title"><i class="fas fa-envelope"></i> Contact & Social Info</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="form-group">
+                                <label id="label-email">Email</label>
+                                <input type="text" class="input-control" data-model="email" oninput="updateData(this)">
+                            </div>
+                            <div class="form-group">
+                                <label id="label-phone">Phone Number</label>
+                                <input type="text" class="input-control" data-model="phone" oninput="updateData(this)">
+                            </div>
+                            <div class="form-group">
+                                <label id="label-address">Address</label>
+                                <input type="text" class="input-control" data-model="address" oninput="updateData(this)">
+                            </div>
+                            <div class="form-group">
+                                <label id="label-linkedin">LinkedIn URL</label>
+                                <input type="text" class="input-control" data-model="linkedin" placeholder="https://linkedin.com/in/..." oninput="updateData(this)">
+                            </div>
+                            <div class="form-group">
+                                <label id="label-portfolio">Portfolio/Website URL</label>
+                                <input type="text" class="input-control" data-model="portfolio" placeholder="https://mywebsite.com" oninput="updateData(this)">
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label id="label-jobTitle">المسمى الوظيفي</label>
-                        <input type="text" class="input-control" data-model="jobTitle" placeholder="مهندس برمجيات..." oninput="updateData(this)">
-                    </div>
-                    <div class="form-group">
-                        <label id="label-email">البريد الإلكتروني</label>
-                        <input type="text" class="input-control" data-model="email" oninput="updateData(this)">
-                    </div>
-                    <div class="form-group">
-                        <label id="label-phone">رقم الهاتف</label>
-                        <input type="text" class="input-control" data-model="phone" oninput="updateData(this)">
-                    </div>
-                    <div class="form-group">
-                        <label id="label-address">العنوان</label>
-                        <input type="text" class="input-control" data-model="address" oninput="updateData(this)">
-                    </div>
-                    <div class="form-group">
-                        <label id="label-summary">ملخص شخصي</label>
-                        <textarea class="input-control" data-model="summary" oninput="updateData(this)"></textarea>
+
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <span id="accordion-summary-title"><i class="fas fa-clipboard-list"></i> Personal Summary</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label id="label-summary">Summary</label>
+                                <textarea class="input-control" data-model="summary" oninput="updateData(this)"></textarea>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div id="tab-exp" class="tab-pane" style="display:none;">
-                    <div class="section-title" id="title-exp"><i class="fas fa-briefcase"></i> خبرات العمل</div>
-                    <div id="exp-list-container"></div>
-                    <button class="btn-add-item" id="btn-add-exp" onclick="addItem('experience')">+ إضافة خبرة عمل</button>
+                    <div class="accordion-item">
+                        <div class="accordion-header open" onclick="toggleAccordion(this)">
+                            <span id="accordion-exp-title"><i class="fas fa-briefcase"></i> Work Experience</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content open">
+                            <div id="exp-list-container"></div>
+                            <button class="btn-add-item" id="btn-add-exp" onclick="addItem('experience')">+ Add Work Experience</button>
+                        </div>
+                    </div>
 
-                    <hr style="margin: 25px 0; border: 0; border-top: 1px solid var(--border);">
-
-                    <div class="section-title" id="title-edu"><i class="fas fa-graduation-cap"></i> التعليم</div>
-                    <div id="edu-list-container"></div>
-                    <button class="btn-add-item" id="btn-add-edu" onclick="addItem('education')">+ إضافة مؤهل علمي</button>
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <span id="accordion-edu-title"><i class="fas fa-graduation-cap"></i> Education</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div id="edu-list-container"></div>
+                            <button class="btn-add-item" id="btn-add-edu" onclick="addItem('education')">+ Add Qualification</button>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="tab-skills" class="tab-pane" style="display:none;">
+                    <div class="section-title"><i class="fas fa-cogs"></i> <span id="skills-title">Technical and Soft Skills</span></div>
                     <div class="form-group">
-                        <label id="label-skills">اكتب المهارات (افصل بينها بفاصلة)</label>
+                        <label id="label-skills">Enter Skills (Comma or Newline Separated)</label>
+                        <p id="skill-hint" style="font-size:0.8rem; color:var(--text-muted); margin-bottom:5px;">(Example: Python, AWS, Teamwork, or each skill on a new line)</p>
                         <textarea class="input-control" data-model="skills" placeholder="HTML, CSS, Photoshop..." style="height:120px;" oninput="updateData(this)"></textarea>
                     </div>
                 </div>
 
-                <div id="tab-settings" class="tab-pane" style="display:none;">
-                    <div class="section-title"><i class="fas fa-cogs"></i> <span id="settings-title">الإعدادات</span></div>
-                    
-                    <div class="setting-toggle-group">
-                        <label id="label-lang-switch">لغة الواجهة / Interface Language</label>
-                        <select class="input-control" id="langSelect" style="width:150px;" onchange="updateConfig('lang', this.value); updateInterfaceText(this.value)">
-                            <option value="ar">العربية (RTL)</option>
-                            <option value="en">English (LTR)</option>
-                        </select>
-                    </div>
-
-                    <div class="setting-toggle-group">
-                        <label id="label-dark-mode">الوضع المظلم / Dark Mode</label>
-                        <label class="switch">
-                            <input type="checkbox" id="darkModeSwitch" onchange="toggleDarkMode(this.checked)">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-
-                    <div class="about-toggle">
-                        <div class="toggle-header" id="about-header" onclick="toggleAboutSection()">
-                            <span id="about-title"><i class="fas fa-info-circle"></i> حول التطبيق</span>
+                <div id="tab-extras" class="tab-pane" style="display:none;">
+                     <div class="accordion-item">
+                        <div class="accordion-header open" onclick="toggleAccordion(this)">
+                            <span id="accordion-lang-title"><i class="fas fa-globe"></i> Languages</span>
                             <i class="fas fa-chevron-down"></i>
                         </div>
-                        <div class="toggle-content" id="about-content">
-                            <div class="about-text-content">
-                                <h4 id="about-app-name">CV Pro - صانع السيرة الذاتية الاحترافي</h4>
-                                <p id="about-text-intro">نحن نؤمن بأن سيرتك الذاتية هي مفتاحك نحو المستقبل. هذا التطبيق مصمم لمساعدتك في إنشاء سيرة ذاتية احترافية وجذابة في دقائق معدودة، بألوان وتصاميم عصرية ومناسبة.</p>
-                                <p id="about-text-focus" style="color:var(--primary);">ركز على المحتوى، واترك لنا مهمة التنسيق والاحترافية.</p>
-                                <p id="about-dev" style="font-weight:700; color:var(--primary); margin-top:10px;">تصميم وتطوير MAHMOUD HASSAN</p>
+                        <div class="accordion-content open">
+                            <div id="lang-list-container"></div>
+                            <button class="btn-add-item" id="btn-add-lang" onclick="addItem('languages')">+ Add Language</button>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <span id="accordion-hobbies-title"><i class="fas fa-heart"></i> Hobbies and Interests</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                             <div class="form-group">
+                                <label id="label-hobbies">Enter Hobbies (Comma or Newline Separated)</label>
+                                <textarea class="input-control" data-model="hobbies" placeholder="Reading, Traveling, Graphic Design..." style="height:100px;" oninput="updateData(this)"></textarea>
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div id="tab-settings" class="tab-pane" style="display:none;">
+                    <div class="section-title"><i class="fas fa-cogs"></i> <span id="settings-title">Settings</span></div>
+                    
+                    <div class="form-group">
+                        <label id="label-lang-switch">Interface Language</label>
+                        <select class="input-control" id="langSelect" style="width:150px;" onchange="updateConfig('lang', this.value); updateInterfaceText(this.value)">
+                            <option value="en">English (LTR)</option>
+                            <option value="ar">العربية (RTL)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label id="label-dark-mode">Dark Mode</label>
+                        <label class="switch" style="position:relative; display:inline-block; width:45px; height:22px;">
+                            <input type="checkbox" id="darkModeSwitch" onchange="toggleDarkMode(this.checked)" style="opacity:0; width:0; height:0;">
+                            <span class="slider" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#ccc; transition:.4s; border-radius:22px;">
+                                <span style="position:absolute; content:''; height:18px; width:18px; left:2px; bottom:2px; background:white; transition:.4s; border-radius:50%;"></span>
+                            </span>
+                        </label>
+                        <style>
+                            .switch input:checked + .slider { background-color: var(--primary); }
+                            .switch input:checked + .slider > span { transform: translateX(23px); }
+                            .dark-mode .switch input:checked + .slider { background-color: var(--primary); }
+                            .dark-mode .switch input + .slider { background-color: #4b5563; }
+                        </style>
+                    </div>
+
+                    <div class="about-toggle">
+                        <div class="accordion-header" id="about-header" onclick="toggleAccordion(this)">
+                            <span id="about-title"><i class="fas fa-info-circle"></i> About CV Pro</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content" id="about-content">
+                            <div class="about-text-content" style="text-align:left;">
+                                <h4 id="about-app-name">CV Pro - Professional Resume Builder</h4>
+                                <p id="about-text-intro">Your resume is the key to your future. This tool helps you create professional, modern, and attractive resumes in minutes.</p>
+                                <p id="about-text-focus" style="color:var(--primary);">Focus on the content, and let us handle the design.</p>
+                                <p id="about-dev" style="font-weight:700; color:var(--primary); margin-top:10px;">Designed & Developed by MAHMOUD HASSAN</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
             <div style="padding: 20px; background: var(--bg-panel); border-top: 1px solid var(--border); transition: background 0.3s, border-color 0.3s;">
                 <button class="btn btn-download" onclick="downloadPDF()">
-                    <i class="fas fa-file-pdf"></i> <span id="btn-download-text">تحميل PDF (طباعة)</span>
+                    <i class="fas fa-file-pdf"></i> <span id="btn-download-text">Download PDF (Print)</span>
                 </button>
             </div>
         </aside>
     </div>
+    
+    <button class="mobile-preview-toggle" onclick="toggleMobilePreview()">
+        <i class="fas fa-eye" id="mobile-toggle-icon"></i>
+    </button>
 
     <script>
         // --- Translations (Language Strings) ---
         const translations = {
-            ar: {
-                // UI Elements
-                'tab-design': 'التصميم', 'tab-info': 'البيانات', 'tab-exp': 'الخبرات', 'tab-skills': 'المهارات', 'tab-settings': 'الإعدادات',
-                'btn-download-text': 'تحميل PDF (طباعة)', 'title-exp': 'خبرات العمل', 'title-edu': 'التعليم',
-                'btn-add-exp': '+ إضافة خبرة عمل', 'btn-add-edu': '+ إضافة مؤهل علمي',
-                'label-color': 'لون القالب / Theme Color', 'label-template': 'اختر القالب / Select Template',
-                'name-modern': 'عصري / Modern', 'name-classic': 'كلاسيكي / Classic', 'name-creative': 'إبداعي / Creative',
-                
-                // Form Labels
-                'label-photo': 'الصورة الشخصية', 'label-name': 'الاسم الكامل', 'label-jobTitle': 'المسمى الوظيفي',
-                'label-email': 'البريد الإلكتروني', 'label-phone': 'رقم الهاتف', 'label-address': 'العنوان',
-                'label-summary': 'ملخص شخصي', 'label-skills': 'اكتب المهارات (افصل بينها بفاصلة)',
-
-                // Settings
-                'settings-title': 'الإعدادات', 'label-lang-switch': 'لغة الواجهة / Interface Language', 
-                'label-dark-mode': 'الوضع المظلم / Dark Mode', 'about-title': 'حول التطبيق',
-                'about-app-name': 'CV Pro - صانع السيرة الذاتية الاحترافي',
-                'about-text-intro': 'نحن نؤمن بأن سيرتك الذاتية هي مفتاحك نحو المستقبل. هذا التطبيق مصمم لمساعدتك في إنشاء سيرة ذاتية احترافية وجذابة في دقائق معدودة، بألوان وتصاميم عصرية ومناسبة.',
-                'about-text-focus': 'ركز على المحتوى، واترك لنا مهمة التنسيق والاحترافية.',
-                'about-dev': 'تصميم وتطوير MAHMOUD HASSAN',
-                
-                // CV Labels
-                cv_contact: 'معلومات الاتصال', cv_skills: 'المهارات', cv_profile: 'نبذة عني', cv_exp: 'الخبرات العملية', cv_edu: 'المؤهلات العلمية',
-                // Item Placeholders
-                ph_exp_title: 'المسمى الوظيفي', ph_edu_title: 'الدرجة العلمية',
-                ph_exp_subtitle: 'الشركة', ph_edu_subtitle: 'الجامعة',
-                ph_date: 'التاريخ', ph_desc: 'الوصف',
-                
-                // Header Buttons
-                btn_reset: 'مسح البيانات', btn_sample: 'مثال جاهز', btn_settings: 'الإعدادات'
-            },
             en: {
                 // UI Elements
-                'tab-design': 'Design', 'tab-info': 'Data', 'tab-exp': 'Experience', 'tab-skills': 'Skills', 'tab-settings': 'Settings',
-                'btn-download-text': 'Download PDF (Print)', 'title-exp': 'Work Experience', 'title-edu': 'Education',
-                'btn-add-exp': '+ Add Work Experience', 'btn-add-edu': '+ Add Qualification',
-                'label-color': 'Theme Color', 'label-template': 'Select Template',
-                'name-modern': 'Modern', 'name-classic': 'Classic', 'name-creative': 'Creative',
-
+                'tab-design': 'Design', 'tab-info': 'Personal Info', 'tab-exp': 'Experience & Ed.', 'tab-skills': 'Skills', 'tab-extras': 'Extras', 'tab-settings': 'Settings',
+                'btn-download-text': 'Download PDF (Print)', 'skills-title': 'Technical and Soft Skills',
+                'btn-add-exp': '+ Add Work Experience', 'btn-add-edu': '+ Add Qualification', 'btn-add-lang': '+ Add Language',
+                'label-color': 'Theme Color', 'label-template': 'Select Template', 'label-font-settings': 'Font Settings',
+                'label-font-head': 'Heading Font', 'label-font-body': 'Body Font', 'label-font-size': 'Base Font Size (px)',
+                'name-modern': 'Modern', 'name-classic': 'Classic', 'name-creative': 'Creative', 'name-professional': 'Professional',
+                
                 // Form Labels
-                'label-photo': 'Personal Photo', 'label-name': 'Full Name', 'label-jobTitle': 'Job Title',
-                'label-email': 'Email', 'label-phone': 'Phone Number', 'label-address': 'Address',
-                'label-summary': 'Personal Summary', 'label-skills': 'Enter Skills (Comma Separated)',
+                'label-photo': 'Profile Photo', 'label-name': 'Full Name', 'label-jobTitle': 'Job Title',
+                'label-email': 'Email', 'label-phone': 'Phone Number', 'label-address': 'Address', 'label-linkedin': 'LinkedIn URL', 'label-portfolio': 'Portfolio/Website URL',
+                'label-summary': 'Personal Summary', 'label-skills': 'Enter Skills (Comma or Newline Separated)', 'label-hobbies': 'Enter Hobbies (Comma or Newline Separated)',
+                
+                // Accordion Titles
+                'accordion-personal-title': 'Personal Information', 'accordion-contact-title': 'Contact & Social Info', 'accordion-summary-title': 'Personal Summary',
+                'accordion-exp-title': 'Work Experience', 'accordion-edu-title': 'Education', 'accordion-lang-title': 'Languages', 'accordion-hobbies-title': 'Hobbies and Interests',
 
                 // Settings
                 'settings-title': 'Settings', 'label-lang-switch': 'Interface Language', 
-                'label-dark-mode': 'Dark Mode', 'about-title': 'About App',
-                'about-app-name': 'CV Pro - Professional CV Builder',
-                'about-text-intro': 'We believe your CV is the key to your future. This app is designed to help you create an attractive and professional CV in minutes, with modern colors and layouts.',
-                'about-text-focus': 'Focus on the content, and leave the formatting and professionalism to us.',
+                'label-dark-mode': 'Dark Mode', 'about-title': 'About CV Pro',
+                'about-app-name': 'CV Pro - Professional Resume Builder',
+                'about-text-intro': 'Your resume is the key to your future. This tool helps you create professional, modern, and attractive resumes in minutes.',
+                'about-text-focus': 'Focus on the content, and let us handle the design.',
                 'about-dev': 'Designed & Developed by MAHMOUD HASSAN',
-
+                
                 // CV Labels
-                cv_contact: 'Contact Info', cv_skills: 'Skills', cv_profile: 'Profile', cv_exp: 'Experience', cv_edu: 'Education',
+                cv_contact: 'Contact Info', cv_social: 'Social Links', cv_skills: 'Skills', cv_profile: 'Profile', cv_exp: 'Experience', cv_edu: 'Education', cv_lang: 'Languages', cv_hobbies: 'Hobbies',
                 // Item Placeholders
-                ph_exp_title: 'Job Title', ph_edu_title: 'Degree/Certificate',
-                ph_exp_subtitle: 'Company', ph_edu_subtitle: 'University/Institute',
+                ph_exp_title: 'Job Title', ph_edu_title: 'Degree/Certificate', ph_lang_title: 'Language',
+                ph_exp_subtitle: 'Company', ph_edu_subtitle: 'University/Institute', ph_lang_subtitle: 'Level',
                 ph_date: 'Date/Duration', ph_desc: 'Description',
+                
+                // Header Buttons
+                btn_reset: 'Clear Data', btn_sample: 'Load Sample',
+                // Reorder Buttons
+                btn_up: 'Move Up', btn_down: 'Move Down',
+                // Photo Button
+                btn_remove_photo: 'Remove Photo',
+                // Skill Hint
+                skill_hint: '(Example: Python, AWS, Teamwork, or each skill on a new line)',
+                
+                // Mobile Toggle
+                toggle_show: 'Show Preview', toggle_edit: 'Back to Edit'
+            },
+            ar: {
+                // UI Elements
+                'tab-design': 'التصميم', 'tab-info': 'البيانات الشخصية', 'tab-exp': 'الخبرات والتعليم', 'tab-skills': 'المهارات', 'tab-extras': 'إضافات', 'tab-settings': 'الإعدادات',
+                'btn-download-text': 'تحميل PDF (طباعة)', 'skills-title': 'المهارات التقنية والناعمة',
+                'btn-add-exp': '+ إضافة خبرة عمل', 'btn-add-edu': '+ إضافة مؤهل علمي', 'btn-add-lang': '+ إضافة لغة',
+                'label-color': 'لون القالب', 'label-template': 'اختر القالب', 'label-font-settings': 'إعدادات الخط',
+                'label-font-head': 'خط العناوين', 'label-font-body': 'خط النص', 'label-font-size': 'حجم الخط الأساسي (بالبكسل)',
+                'name-modern': 'عصري', 'name-classic': 'كلاسيكي', 'name-creative': 'إبداعي', 'name-professional': 'احترافي',
+                
+                // Form Labels
+                'label-photo': 'الصورة الشخصية', 'label-name': 'الاسم الكامل', 'label-jobTitle': 'المسمى الوظيفي',
+                'label-email': 'البريد الإلكتروني', 'label-phone': 'رقم الهاتف', 'label-address': 'العنوان', 'label-linkedin': 'رابط LinkedIn', 'label-portfolio': 'رابط الموقع/المعرض',
+                'label-summary': 'ملخص شخصي', 'label-skills': 'اكتب المهارات (فاصلة أو سطر جديد)', 'label-hobbies': 'اكتب الاهتمامات (فاصلة أو سطر جديد)',
+                
+                // Accordion Titles
+                'accordion-personal-title': 'المعلومات الشخصية', 'accordion-contact-title': 'معلومات الاتصال والشبكات', 'accordion-summary-title': 'الملخص الشخصي',
+                'accordion-exp-title': 'خبرات العمل', 'accordion-edu-title': 'التعليم', 'accordion-lang-title': 'اللغات', 'accordion-hobbies-title': 'الاهتمامات والهوايات',
+
+                // Settings
+                'settings-title': 'الإعدادات', 'label-lang-switch': 'لغة الواجهة', 
+                'label-dark-mode': 'الوضع المظلم', 'about-title': 'حول CV Pro',
+                'about-app-name': 'CV Pro - صانع السيرة الذاتية الاحترافي',
+                'about-text-intro': 'نحن نؤمن بأن سيرتك الذاتية هي مفتاحك نحو المستقبل. هذا التطبيق مصمم لمساعدتك في إنشاء سيرة ذاتية احترافية وجذابة في دقائق معدودة.',
+                'about-text-focus': 'ركز على المحتوى، واترك لنا مهمة التصميم.',
+                'about-dev': 'تصميم وتطوير MAHMOUD HASSAN',
+                
+                // CV Labels
+                cv_contact: 'معلومات الاتصال', cv_social: 'روابط التواصل', cv_skills: 'المهارات', cv_profile: 'الملف الشخصي', cv_exp: 'الخبرات العملية', cv_edu: 'المؤهلات العلمية', cv_lang: 'اللغات', cv_hobbies: 'الاهتمامات',
+                // Item Placeholders
+                ph_exp_title: 'المسمى الوظيفي', ph_edu_title: 'الدرجة العلمية', ph_lang_title: 'اللغة',
+                ph_exp_subtitle: 'الشركة', ph_edu_subtitle: 'الجامعة', ph_lang_subtitle: 'المستوى',
+                ph_date: 'التاريخ/المدة', ph_desc: 'الوصف',
 
                 // Header Buttons
-                btn_reset: 'Clear Data', btn_sample: 'Load Sample', btn_settings: 'Settings'
+                btn_reset: 'مسح البيانات', btn_sample: 'مثال جاهز',
+                // Reorder Buttons
+                btn_up: 'للأعلى', btn_down: 'للأسفل',
+                // Photo Button
+                btn_remove_photo: 'حذف الصورة',
+                // Skill Hint
+                skill_hint: '(مثال: بايثون، AWS، العمل الجماعي، أو كل مهارة في سطر جديد)',
+                
+                // Mobile Toggle
+                toggle_show: 'عرض المعاينة', toggle_edit: 'العودة للتعديل'
             }
         };
 
         // --- State Management ---
         const defaultState = {
             config: {
-                lang: 'ar',
+                lang: 'en',
                 color: '#2563eb',
                 template: 'tmpl-modern',
-                darkMode: false
+                darkMode: false,
+                fontHead: 'Inter',
+                fontBody: 'Inter',
+                fontSize: 15,
             },
             data: {
-                name: '',
-                jobTitle: '',
-                email: '',
-                phone: '',
-                address: '',
-                summary: '',
-                photo: null,
-                skills: '',
-                experience: [],
-                education: []
+                name: '', jobTitle: '', email: '', phone: '', address: '', linkedin: '', portfolio: '',
+                summary: '', photo: null, skills: '', hobbies: '',
+                experience: [], education: [], languages: []
             }
         };
 
         let state = JSON.parse(JSON.stringify(defaultState));
         
         document.addEventListener('DOMContentLoaded', () => {
-            const saved = localStorage.getItem('cv_builder_v2_state');
+            const saved = localStorage.getItem('cv_builder_v3_state');
             if(saved) state = JSON.parse(saved);
             renderAll();
-            // Ensure interface is set to initial/saved language
             updateInterfaceText(state.config.lang);
-            // Apply dark mode immediately
             if (state.config.darkMode) {
                 document.getElementById('darkModeSwitch').checked = true;
                 document.getElementById('app-body').classList.add('dark-mode');
             }
         });
 
-        // --- Logic ---
-        function updateConfig(key, value) {
-            state.config[key] = value;
-            saveAndRender();
-        }
+        // --- Core Logic ---
 
-        // NEW: Dark Mode Toggle
-        function toggleDarkMode(isDark) {
-            state.config.darkMode = isDark;
-            document.getElementById('app-body').classList.toggle('dark-mode', isDark);
-            saveAndRender();
-        }
-
-        // NEW: About Section Toggle
-        function toggleAboutSection() {
-            const content = document.getElementById('about-content');
-            const header = document.getElementById('about-header');
+        function saveAndRender() {
+            // NEW: Show loading state before rendering
+            document.getElementById('cv-paper').classList.add('loading');
             
-            content.classList.toggle('open');
-            header.classList.toggle('open');
-        }
-
-        // NEW: Interface Text Update Function
-        function updateInterfaceText(lang) {
-            const t = translations[lang];
-            
-            // Set body/app direction
-            document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-            document.body.style.fontFamily = lang === 'ar' ? "'Tajawal', 'Inter', sans-serif" : "'Inter', 'Tajawal', sans-serif";
-            
-            // Update Tab Buttons
-            document.querySelectorAll('.tabs-nav .tab-btn').forEach(btn => {
-                const tabText = btn.innerText.toLowerCase();
-                let tabId;
-
-                if (tabText.includes('design') || tabText.includes('التصميم')) tabId = 'design';
-                else if (tabText.includes('data') || tabText.includes('البيانات')) tabId = 'info';
-                else if (tabText.includes('exp') || tabText.includes('الخبرات')) tabId = 'exp';
-                else if (tabText.includes('skills') || tabText.includes('المهارات')) tabId = 'skills';
-                else if (tabText.includes('settings') || tabText.includes('الإعدادات')) tabId = 'settings';
+            // Debounce the actual rendering to prevent lag on fast input
+            clearTimeout(window.renderTimeout);
+            window.renderTimeout = setTimeout(() => {
+                localStorage.setItem('cv_builder_v3_state', JSON.stringify(state));
                 
-                if (tabId) btn.innerText = t[`tab-${tabId}`];
-            });
+                // Apply Font Configuration to CSS Variables
+                const root = document.documentElement;
+                root.style.setProperty('--cv-font-head', state.config.fontHead.includes(' ') ? `'${state.config.fontHead}'` : state.config.fontHead);
+                root.style.setProperty('--cv-font-body', state.config.fontBody.includes(' ') ? `'${state.config.fontBody}'` : state.config.fontBody);
+                root.style.setProperty('--cv-font-size-base', `${state.config.fontSize}px`);
+                root.style.setProperty('--theme-color', state.config.color); 
 
-            // Update UI Elements by ID (Use innerHTML for icons)
-            const uiElements = {
-                'btn-download-text': t['btn-download-text'],
-                'title-exp': `<i class="fas fa-briefcase"></i> ${t['title-exp']}`, 
-                'title-edu': `<i class="fas fa-graduation-cap"></i> ${t['title-edu']}`, 
-                'btn-add-exp': t['btn-add-exp'], 
-                'btn-add-edu': t['btn-add-edu'], 
-                'settings-title': t['settings-title'], 
-                'about-title': `<i class="fas fa-info-circle"></i> ${t['about-title']}`,
-                'about-app-name': t['about-app-name'],
-                'about-text-intro': t['about-text-intro'],
-                'about-text-focus': t['about-text-focus'],
-                'about-dev': t['about-dev']
-            };
-            
-            for (const id in uiElements) {
-                const el = document.getElementById(id);
-                if (el) el.innerHTML = uiElements[id];
-            }
 
-            // Update Form Labels
-            const labelElements = ['label-color', 'label-template', 'label-photo', 'label-name', 'label-jobTitle', 'label-email', 'label-phone', 'label-address', 'label-summary', 'label-skills', 'label-lang-switch', 'label-dark-mode'];
-            labelElements.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.innerText = t[id];
-            });
-            
-            // Update Template Names
-            document.getElementById('name-modern').innerText = t['name-modern'];
-            document.getElementById('name-classic').innerText = t['name-classic'];
-            document.getElementById('name-creative').innerText = t['name-creative'];
-            
-            // Update Header Buttons tooltips
-            document.querySelector('[onclick="resetData()"]').title = t.btn_reset;
-            document.querySelector('[onclick="loadSample()"]').title = t.btn_sample;
-
-            // Re-render form lists for item placeholders
-            renderFormLists();
-            
-            // Re-render CV preview
-            renderPreview();
+                renderPreview();
+                // NEW: Hide loading state after rendering
+                document.getElementById('cv-paper').classList.remove('loading');
+            }, 150); // Small debounce time
         }
 
-
-        function setTemplate(tmplName) {
-            state.config.template = tmplName;
-            document.querySelectorAll('.tmpl-card').forEach(el => el.classList.remove('active'));
-            document.getElementById(`card-${tmplName}`).classList.add('active');
+        function updateConfig(key, value) {
+            if (key === 'fontSize') {
+                state.config[key] = parseInt(value) || 15;
+            } else {
+                state.config[key] = value;
+            }
             saveAndRender();
         }
 
@@ -748,17 +739,56 @@
             const file = input.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = (e) => {
-                    state.data.photo = e.target.result;
-                    saveAndRender();
-                };
+                reader.onload = (e) => { state.data.photo = e.target.result; saveAndRender(); updatePhotoButton(); };
                 reader.readAsDataURL(file);
             }
         }
+        function removePhoto() {
+            state.data.photo = null;
+            document.getElementById('photo-file-input').value = '';
+            updatePhotoButton(); // NEW: Update button visibility immediately
+            saveAndRender();
+        }
+        
+        // NEW: Function to control the visibility of the remove photo button
+        function updatePhotoButton() {
+            const btn = document.getElementById('btn-remove-photo');
+            const t = translations[state.config.lang];
+            if (state.data.photo) {
+                btn.style.display = 'block';
+                btn.innerText = t.btn_remove_photo;
+            } else {
+                btn.style.display = 'none';
+            }
+        }
 
+        function toggleDarkMode(isDark) {
+            state.config.darkMode = isDark;
+            document.getElementById('app-body').classList.toggle('dark-mode', isDark);
+            saveAndRender();
+        }
+        
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            header.classList.toggle('open');
+            content.classList.toggle('open');
+        }
+
+        function setTemplate(tmplName) {
+            state.config.template = tmplName;
+            document.querySelectorAll('.tmpl-card').forEach(el => el.classList.remove('active'));
+            document.getElementById(`card-${tmplName}`).classList.add('active');
+            saveAndRender();
+        }
+
+        // --- List Management (Experience, Education, Languages) ---
         function addItem(type) {
             const id = Date.now();
-            state.data[type].push({ id, title: '', subtitle: '', date: '', desc: '' });
+            let newItem = { id, title: '', subtitle: '', date: '', desc: '' };
+            if (type === 'languages') { newItem = { id, title: '', level: translations[state.config.lang].ph_lang_subtitle === 'Level' ? 'Excellent' : 'ممتاز' }; }
+            
+            state.data[type].unshift(newItem); 
+            
             renderFormLists();
             saveAndRender();
         }
@@ -776,11 +806,91 @@
                 saveAndRender();
             }
         }
+        
+        function moveItem(type, id, direction) {
+            const arr = state.data[type];
+            const index = arr.findIndex(item => item.id === id);
+            if (index < 0) return;
 
-        function saveAndRender() {
-            localStorage.setItem('cv_builder_v2_state', JSON.stringify(state));
-            renderPreview();
+            const newIndex = direction === 'up' ? index - 1 : index + 1;
+
+            if (newIndex >= 0 && newIndex < arr.length) {
+                [arr[index], arr[newIndex]] = [arr[newIndex], arr[index]];
+                renderFormLists();
+                saveAndRender();
+            }
         }
+
+        function renderFormLists() {
+            const t = translations[state.config.lang];
+
+            ['experience', 'education', 'languages'].forEach(type => {
+                const container = document.getElementById(`${type === 'experience' ? 'exp' : (type === 'education' ? 'edu' : 'lang')}-list-container`);
+                container.innerHTML = '';
+
+                state.data[type].forEach((item, index, arr) => {
+                    const isExpOrEdu = (type === 'experience' || type === 'education');
+                    
+                    const div = document.createElement('div');
+                    div.className = 'list-item';
+                    
+                    const reorderBtns = `
+                        <div class="reorder-btns">
+                            <button onclick="moveItem('${type}', ${item.id}, 'up')" title="${t.btn_up}" ${index === 0 ? 'disabled' : ''}><i class="fas fa-chevron-up"></i></button>
+                            <button onclick="moveItem('${type}', ${item.id}, 'down')" title="${t.btn_down}" ${index === arr.length - 1 ? 'disabled' : ''}><i class="fas fa-chevron-down"></i></button>
+                        </div>`;
+                    
+                    const removeBtn = `<div class="remove-item" onclick="removeItem('${type}', ${item.id})" title="${t.btn_reset}"><i class="fas fa-times"></i></div>`;
+
+                    if (isExpOrEdu) {
+                        const titlePlaceholder = t[type === 'experience' ? 'ph_exp_title' : 'ph_edu_title'];
+                        const subtitlePlaceholder = t[type === 'experience' ? 'ph_exp_subtitle' : 'ph_edu_subtitle'];
+                        
+                        div.innerHTML = `
+                            ${reorderBtns}
+                            ${removeBtn}
+                            <div class="form-group">
+                                <input type="text" class="input-control" placeholder="${titlePlaceholder}" 
+                                    value="${item.title}" oninput="updateItem('${type}', ${item.id}, 'title', this.value)">
+                            </div>
+                            <div class="form-group" style="display:flex; gap:10px;">
+                                <input type="text" class="input-control" placeholder="${subtitlePlaceholder}" 
+                                    value="${item.subtitle}" oninput="updateItem('${type}', ${item.id}, 'subtitle', this.value)">
+                                <input type="text" class="input-control" placeholder="${t.ph_date}" 
+                                    value="${item.date}" oninput="updateItem('${type}', ${item.id}, 'date', this.value)">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <textarea class="input-control" placeholder="${t.ph_desc}" style="min-height:60px;"
+                                    oninput="updateItem('${type}', ${item.id}, 'desc', this.value)">${item.desc}</textarea>
+                            </div>
+                        `;
+                    } else if (type === 'languages') {
+                        const excellent = t.ph_lang_subtitle === 'Level' ? 'Excellent' : 'ممتاز';
+                        const good = t.ph_lang_subtitle === 'Level' ? 'Good' : 'جيد';
+                        const basic = t.ph_lang_subtitle === 'Level' ? 'Basic' : 'أساسي';
+
+                        div.innerHTML = `
+                            ${reorderBtns}
+                            ${removeBtn}
+                            <div class="form-group">
+                                <input type="text" class="input-control" placeholder="${t.ph_lang_title}" 
+                                    value="${item.title}" oninput="updateItem('languages', ${item.id}, 'title', this.value)">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <select class="input-control" onchange="updateItem('languages', ${item.id}, 'level', this.value)">
+                                    <option value="Excellent" ${item.level === 'Excellent' || item.level === 'ممتاز' ? 'selected' : ''}>${excellent}</option>
+                                    <option value="Good" ${item.level === 'Good' || item.level === 'جيد' ? 'selected' : ''}>${good}</option>
+                                    <option value="Basic" ${item.level === 'Basic' || item.level === 'أساسي' ? 'selected' : ''}>${basic}</option>
+                                </select>
+                            </div>
+                        `;
+                    }
+                    container.appendChild(div);
+                });
+            });
+        }
+
+        // --- Interface Logic (Tabs, Settings, Language) ---
 
         function renderAll() {
             document.querySelectorAll('[data-model]').forEach(input => {
@@ -789,44 +899,360 @@
             });
             document.getElementById('langSelect').value = state.config.lang;
             document.querySelector('input[type="color"]').value = state.config.color;
-            document.getElementById('darkModeSwitch').checked = state.config.darkMode;
+            document.querySelector('input[data-config-key="fontSize"]').value = state.config.fontSize;
+            document.querySelector('select[data-config-key="fontHead"]').value = state.config.fontHead;
+            document.querySelector('select[data-config-key="fontBody"]').value = state.config.fontBody;
+            
             setTemplate(state.config.template);
+            
             renderFormLists();
+            updatePhotoButton(); // NEW: Update button visibility on initial load
+            saveAndRender(); 
+        }
+        
+        function updateInterfaceText(lang) {
+            const t = translations[lang];
+            
+            document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+            document.body.style.fontFamily = lang === 'ar' ? "'Tajawal', 'Inter', sans-serif" : "'Inter', 'Tajawal', sans-serif";
+            
+            // Update Tab Buttons
+            const tabMapping = { 'design': 'design', 'info': 'info', 'exp': 'exp', 'skills': 'skills', 'extras': 'extras', 'settings': 'settings' };
+            document.querySelectorAll('.tabs-nav .tab-btn').forEach(btn => {
+                const tabId = Object.keys(tabMapping).find(key => btn.onclick.toString().includes(`switchTab('${key}')`));
+                if (tabId) btn.innerText = t[`tab-${tabId}`];
+            });
+
+            // Update UI Elements by ID
+            const uiElements = {
+                'btn-download-text': t['btn-download-text'],
+                'skills-title': `<i class="fas fa-cogs"></i> ${t['skills-title']}`, 
+                'btn-add-exp': t['btn-add-exp'], 'btn-add-edu': t['btn-add-edu'], 'btn-add-lang': t['btn-add-lang'],
+                'settings-title': `<i class="fas fa-cogs"></i> ${t['settings-title']}`, 
+                'about-title': `<i class="fas fa-info-circle"></i> ${t['about-title']}`,
+                'about-app-name': t['about-app-name'], 'about-text-intro': t['about-text-intro'],
+                'about-text-focus': t['about-text-focus'], 'about-dev': t['about-dev'],
+                // Accordion Titles
+                'accordion-personal-title': `<i class="fas fa-user"></i> ${t['accordion-personal-title']}`,
+                'accordion-contact-title': `<i class="fas fa-envelope"></i> ${t['accordion-contact-title']}`,
+                'accordion-summary-title': `<i class="fas fa-clipboard-list"></i> ${t['accordion-summary-title']}`,
+                'accordion-exp-title': `<i class="fas fa-briefcase"></i> ${t['accordion-exp-title']}`,
+                'accordion-edu-title': `<i class="fas fa-graduation-cap"></i> ${t['accordion-edu-title']}`,
+                'accordion-lang-title': `<i class="fas fa-globe"></i> ${t['accordion-lang-title']}`,
+                'accordion-hobbies-title': `<i class="fas fa-heart"></i> ${t['accordion-hobbies-title']}`,
+                'label-font-settings': `<i class="fas fa-font"></i> ${t['label-font-settings']}`,
+                // NEW: Skill Hint
+                'skill-hint': t['skill_hint']
+            };
+            
+            for (const id in uiElements) {
+                const el = document.getElementById(id);
+                if (el) el.innerHTML = uiElements[id];
+            }
+
+            // Update Labels and Placeholders
+            const textElements = ['label-color', 'label-template', 'label-photo', 'label-name', 'label-jobTitle', 'label-email', 'label-phone', 'label-address', 'label-linkedin', 'label-portfolio', 'label-summary', 'label-skills', 'label-hobbies', 'label-lang-switch', 'label-dark-mode', 'label-font-head', 'label-font-body', 'label-font-size', 'name-modern', 'name-classic', 'name-creative', 'name-professional'];
+            textElements.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = t[id];
+            });
+            
+            // Update Header Buttons tooltips
+            document.querySelector('[onclick="resetData()"]').title = t.btn_reset;
+            document.querySelector('[onclick="loadSample()"]').title = t.btn_sample;
+            
+            // Update Mobile Toggle text/icon
+            const isPreviewVisible = document.getElementById('app-body').classList.contains('sidebar-hidden');
+            updateMobileToggleButton(isPreviewVisible);
+            
+            // NEW: Update Photo Button Text
+            updatePhotoButton();
+
+            renderFormLists();
+            renderPreview();
         }
 
-        function renderFormLists() {
+        // NEW: Mobile Preview Toggle Function
+        function toggleMobilePreview() {
+            const app = document.getElementById('app-body');
+            const isHidden = app.classList.toggle('sidebar-hidden');
+            updateMobileToggleButton(isHidden);
+        }
+        
+        function updateMobileToggleButton(isPreviewVisible) {
+            const btn = document.querySelector('.mobile-preview-toggle');
+            const icon = document.getElementById('mobile-toggle-icon');
             const t = translations[state.config.lang];
 
-            ['experience', 'education'].forEach(type => {
-                const container = document.getElementById(`${type === 'experience' ? 'exp' : 'edu'}-list-container`);
-                container.innerHTML = '';
-                state.data[type].forEach(item => {
-                    const titlePlaceholder = t[type === 'experience' ? 'ph_exp_title' : 'ph_edu_title'];
-                    const subtitlePlaceholder = t[type === 'experience' ? 'ph_exp_subtitle' : 'ph_edu_subtitle'];
-                    
-                    const div = document.createElement('div');
-                    div.className = 'list-item';
-                    div.innerHTML = `
-                        <div class="remove-item" onclick="removeItem('${type}', ${item.id})"><i class="fas fa-times"></i></div>
-                        <div class="form-group">
-                            <input type="text" class="input-control" placeholder="${titlePlaceholder}" 
-                                value="${item.title}" oninput="updateItem('${type}', ${item.id}, 'title', this.value)">
-                        </div>
-                        <div class="form-group" style="display:flex; gap:10px;">
-                            <input type="text" class="input-control" placeholder="${subtitlePlaceholder}" 
-                                value="${item.subtitle}" oninput="updateItem('${type}', ${item.id}, 'subtitle', this.value)">
-                            <input type="text" class="input-control" placeholder="${t.ph_date}" 
-                                value="${item.date}" oninput="updateItem('${type}', ${item.id}, 'date', this.value)">
-                        </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <textarea class="input-control" placeholder="${t.ph_desc}" style="min-height:60px;"
-                                oninput="updateItem('${type}', ${item.id}, 'desc', this.value)">${item.desc}</textarea>
-                        </div>
-                    `;
-                    container.appendChild(div);
-                });
-            });
+            if (window.innerWidth < 900) {
+                btn.style.display = 'flex';
+                if (isPreviewVisible) {
+                    icon.className = 'fas fa-times'; 
+                    btn.title = t.toggle_edit;
+                } else {
+                    icon.className = 'fas fa-eye'; 
+                    btn.title = t.toggle_show;
+                }
+            } else {
+                btn.style.display = 'none';
+            }
         }
+        
+        window.addEventListener('resize', () => {
+            const isPreviewVisible = document.getElementById('app-body').classList.contains('sidebar-hidden');
+            updateMobileToggleButton(isPreviewVisible);
+        });
+
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tabs-nav .tab-btn').forEach(btn => {
+                if (btn.onclick.toString().includes(`switchTab('${tabId}')`)) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            document.querySelectorAll('.tab-pane').forEach(p => p.style.display = 'none');
+            document.getElementById(`tab-${tabId}`).style.display = 'block';
+        }
+        function downloadPDF() { window.print(); }
+
+        // --- CV Template Functions (Render Helpers) ---
+        
+        function renderSocialLinks(data, isModern = false) {
+            const t = translations[state.config.lang];
+            let html = '';
+            
+            const isRTL = state.config.lang === 'ar';
+            const linkColor = isModern ? 'white' : 'var(--text-main)';
+            const iconMargin = isRTL ? 'margin-inline-start: 5px;' : 'margin-inline-end: 5px;';
+            
+            if (data.linkedin.trim() || data.portfolio.trim()) {
+                if(isModern) html += `<h2>${t.cv_social}</h2><div class="contact-info">`;
+                
+                if (data.linkedin.trim()) {
+                    html += `<div style="margin-bottom: ${isModern ? '10px' : '5px'}; font-size: 0.9rem;">
+                                <i class="fab fa-linkedin" ${isModern ? '' : `style="color:var(--theme-color); ${iconMargin}"`}></i>
+                                <a href="${data.linkedin}" target="_blank" style="color:${linkColor}; text-decoration:none;">
+                                    ${data.linkedin.replace(/(https?:\/\/(www\.)?linkedin\.com\/in\/|(\/)?)/g, '')}
+                                </a>
+                            </div>`;
+                }
+                if (data.portfolio.trim()) {
+                    html += `<div style="margin-bottom: ${isModern ? '10px' : '5px'}; font-size: 0.9rem;">
+                                <i class="fas fa-globe" ${isModern ? '' : `style="color:var(--theme-color); ${iconMargin}"`}></i>
+                                <a href="${data.portfolio}" target="_blank" style="color:${linkColor}; text-decoration:none;">
+                                    ${data.portfolio.replace(/https?:\/\//g, '')}
+                                </a>
+                            </div>`;
+                }
+                
+                if(isModern) html += `</div>`;
+            }
+            return html;
+        }
+
+        function renderEntries(list) {
+            return list.map(item => item.title.trim() ? `
+                <div class="entry" style="margin-bottom: 20px;">
+                    <div class="entry-sub"><span>${item.subtitle}</span><span>${item.date}</span></div>
+                    <div class="entry-title">${item.title}</div>
+                    ${item.desc.trim() ? `<p style="margin-top:5px; font-size: 0.95rem;">${item.desc.replace(/\n/g, '<br>')}</p>` : ''}
+                </div>` : '').join('');
+        }
+        function renderEntriesGrid(list) {
+            return list.map(item => item.title.trim() ? `
+                <div class="entry">
+                    <div class="date-col">${item.date}</div>
+                    <div class="main-col">
+                        <h4>${item.title}</h4>
+                        <div class="sub">${item.subtitle}</div>
+                        ${item.desc.trim() ? `<p>${item.desc.replace(/\n/g, '<br>')}</p>` : ''}
+                    </div>
+                </div>` : '').join('');
+        }
+         function renderEntriesProfessional(list) {
+            return list.map(item => item.title.trim() ? `
+                <div class="entry" style="margin-bottom: 20px;">
+                    <div class="entry-sub"><span>${item.subtitle}</span><span>${item.date}</span></div>
+                    <div class="entry-title">${item.title}</div>
+                    ${item.desc.trim() ? `<p style="margin-top:5px; font-size: 0.95rem;">${item.desc.replace(/\n/g, '<br>')}</p>` : ''}
+                </div>` : '').join('');
+        }
+        function renderSkills(data, config, isCreative=false) {
+            return data.skills.split(/,|\n/).filter(s=>s.trim()).map(s => {
+                if (isCreative) {
+                    const fillStyle = 'width: 85%;'; 
+                    return `<div class="skill-bar"><div class="skill-name">${s.trim()}</div><div class="bar-bg"><div class="bar-fill" style="${fillStyle} background: var(--theme-color);"></div></div></div>`;
+                } else if (config.template === 'tmpl-professional') {
+                    return `<span class="skill-tag">${s.trim()}</span>`;
+                } else {
+                    return `<span style="display:inline-block; background:#eee; padding:4px 10px; border-radius:4px; margin:3px; font-size:0.85rem; font-weight:500; color:#333;">${s.trim()}</span>`;
+                }
+            }).join('');
+        }
+        function renderHobbies(data) {
+            return data.hobbies.split(/,|\n/).filter(h=>h.trim()).map(h => 
+                `<span style="display:inline-block; background:#eee; padding:4px 10px; border-radius:4px; margin:3px; font-size:0.85rem; font-weight:500; color:#333;">${h.trim()}</span>`
+            ).join('');
+        }
+        function renderLanguages(list, lang) {
+            const isRTL = lang === 'ar';
+            return list.map(item => item.title.trim() ? 
+                `<div style="margin-bottom:8px; font-size:0.9rem;">
+                    <span style="font-weight:600; color:white;">${item.title}</span>: 
+                    <span style="font-weight:400; color:#eee;">${item.level}</span>
+                </div>` : ''
+            ).join('');
+        }
+        function renderLanguagesProfessional(list, lang) {
+             return list.map(item => item.title.trim() ? 
+                `<div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:0.95rem;">
+                    <span style="font-weight:600; color:#333;">${item.title}</span>
+                    <span style="font-weight:500; color:#555;">(${item.level})</span>
+                </div>` : ''
+            ).join('');
+        }
+
+        
+        // --- Template Definitions ---
+        const Templates = {
+            'tmpl-modern': (data, config, t) => {
+                const photoHTML = data.photo ? `<img src="${data.photo}" class="profile-img cv-photo" style="width: 140px; height: 140px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.2); margin-bottom: 25px; display: block; object-fit: cover;">` : '';
+                const skillsHTML = renderSkills(data, config);
+                const langHTML = renderLanguages(data.languages, config.lang);
+                const hobbiesHTML = renderHobbies(data);
+                const socialHTML = renderSocialLinks(data, true);
+                const isRTL = config.lang === 'ar';
+
+                return `
+                    <div class="cv-content">
+                        <div class="sidebar-col" style="text-align:${isRTL ? 'right' : 'left'};">
+                            ${photoHTML}
+                            <h2>${t.cv_contact}</h2>
+                            <div class="contact-info">
+                                ${data.email.trim() ? `<div style="margin-bottom: 5px;"><i class="fas fa-envelope" style="margin-inline-end: 8px;"></i> ${data.email}</div>` : ''}
+                                ${data.phone.trim() ? `<div style="margin-bottom: 5px;"><i class="fas fa-phone" style="margin-inline-end: 8px;"></i> ${data.phone}</div>` : ''}
+                                ${data.address.trim() ? `<div style="margin-bottom: 5px;"><i class="fas fa-map-marker-alt" style="margin-inline-end: 8px;"></i> ${data.address}</div>` : ''}
+                            </div>
+                            ${socialHTML}
+                            ${data.skills.trim() ? `<h2>${t.cv_skills}</h2><div style="display:flex; flex-wrap:wrap; gap:5px; color:#333; direction:ltr;">${skillsHTML}</div>` : ''}
+                            ${data.languages.length > 0 ? `<h2>${t.cv_lang}</h2><div>${langHTML}</div>` : ''}
+                            ${data.hobbies.trim() ? `<h2>${t.cv_hobbies}</h2><div style="display:flex; flex-wrap:wrap; gap:5px; color:#333; direction:ltr;">${hobbiesHTML}</div>` : ''}
+                        </div>
+                        <div class="main-col">
+                            <div class="main-header">
+                                <h1>${data.name}</h1>
+                                <div class="job-title">${data.jobTitle}</div>
+                            </div>
+                            ${data.summary.trim() ? `<p style="margin-bottom:30px; line-height:1.6;">${data.summary}</p>` : ''}
+                            ${data.experience.length > 0 ? `<div class="section-head"><i class="fas fa-briefcase" style="margin-inline-end: 8px;"></i> ${t.cv_exp}</div>${renderEntries(data.experience)}` : ''}
+                            ${data.education.length > 0 ? `<div class="section-head"><i class="fas fa-graduation-cap" style="margin-inline-end: 8px;"></i> ${t.cv_edu}</div>${renderEntries(data.education)}` : ''}
+                        </div>
+                    </div>`;
+            },
+            'tmpl-classic': (data, config, t) => {
+                const skillsHTML = renderSkills(data, config);
+                const hobbiesHTML = renderHobbies(data);
+                const langHTML = renderLanguagesProfessional(data.languages, config.lang);
+                const socialHTML = renderSocialLinks(data, false);
+                
+                return `
+                    <div class="cv-content tmpl-classic">
+                        <div class="header">
+                            <h1>${data.name}</h1>
+                            <div class="job-title">${data.jobTitle}</div>
+                            <div class="contacts">
+                                ${data.email.trim() ? `<span>${data.email}</span> | ` : ''}
+                                ${data.phone.trim() ? `<span>${data.phone}</span> | ` : ''}
+                                ${data.address.trim() ? `<span>${data.address}</span>` : ''}
+                            </div>
+                            <div class="contacts" style="margin-top:5px;">${socialHTML}</div>
+                        </div>
+                        ${data.summary.trim() ? `<h3>${t.cv_profile}</h3><p>${data.summary}</p>` : ''}
+                        ${data.experience.length > 0 ? `<h3>${t.cv_exp}</h3>${renderEntriesGrid(data.experience)}` : ''}
+                        ${data.education.length > 0 ? `<h3>${t.cv_edu}</h3>${renderEntriesGrid(data.education)}` : ''}
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+                            ${data.skills.trim() ? `
+                                <div><h3>${t.cv_skills}</h3><div>${skillsHTML}</div></div>
+                            ` : ''}
+                            ${data.languages.length > 0 ? `
+                                <div><h3>${t.cv_lang}</h3><div>${langHTML}</div></div>
+                            ` : ''}
+                        </div>
+                        ${data.hobbies.trim() ? `<h3>${t.cv_hobbies}</h3><div style="margin-top:10px;">${hobbiesHTML}</div>` : ''}
+                    </div>`;
+            },
+            'tmpl-creative': (data, config, t) => {
+                const skillsHTML = renderSkills(data, config, true); 
+                const hobbiesHTML = renderHobbies(data);
+                const langHTML = renderLanguagesProfessional(data.languages, config.lang);
+                const socialHTML = renderSocialLinks(data, false);
+
+                return `
+                    <div class="cv-content tmpl-creative">
+                        <div class="header">
+                            <div><h1>${data.name}</h1><div class="job-title">${data.jobTitle}</div></div>
+                            <div class="contacts">
+                                ${data.email.trim() ? `<div>${data.email} <i class="fas fa-envelope" style="color:var(--theme-color)"></i></div>` : ''}
+                                ${data.phone.trim() ? `<div>${data.phone} <i class="fas fa-phone" style="color:var(--theme-color)"></i></div>` : ''}
+                                ${data.address.trim() ? `<div>${data.address} <i class="fas fa-map-marker-alt" style="color:var(--theme-color)"></i></div>` : ''}
+                            </div>
+                        </div>
+                        <div class="grid-layout">
+                            <div class="main-side">
+                                ${data.summary.trim() ? `<h3>${t.cv_profile}</h3><p style="margin-bottom:30px;">${data.summary}</p>` : ''}
+                                ${data.experience.length > 0 ? `<h3>${t.cv_exp}</h3>${renderEntries(data.experience)}` : ''}
+                                ${data.education.length > 0 ? `<h3>${t.cv_edu}</h3>${renderEntries(data.education)}` : ''}
+                                ${data.hobbies.trim() ? `<h3>${t.cv_hobbies}</h3><div style="margin-top:10px;">${hobbiesHTML}</div>` : ''}
+                            </div>
+                            <div class="side-bar">
+                                ${data.photo ? `<img src="${data.photo}" style="width:100%; margin-bottom:20px; border-radius:8px; object-fit:cover; aspect-ratio:1/1;">` : ''}
+                                ${data.linkedin.trim() || data.portfolio.trim() ? `<h3>${t.cv_social}</h3>${socialHTML}` : ''}
+                                ${data.skills.trim() ? `<h3>${t.cv_skills}</h3>${renderSkills(data, config, true)}` : ''}
+                                ${data.languages.length > 0 ? `<h3>${t.cv_lang}</h3><div>${langHTML}</div>` : ''}
+                            </div>
+                        </div>
+                    </div>`;
+            },
+            'tmpl-professional': (data, config, t) => {
+                const skillsHTML = renderSkills(data, config);
+                const langHTML = renderLanguagesProfessional(data.languages, config.lang);
+                const hobbiesHTML = renderHobbies(data);
+                const socialHTML = renderSocialLinks(data, false);
+
+                return `
+                    <div class="cv-content tmpl-professional">
+                        <div class="header">
+                            <h1>${data.name}</h1>
+                            <div class="job-title">${data.jobTitle}</div>
+                            <div class="contacts">
+                                ${data.email.trim() ? `<span><i class="fas fa-envelope"></i> ${data.email}</span>` : ''}
+                                ${data.phone.trim() ? `<span><i class="fas fa-phone"></i> ${data.phone}</span>` : ''}
+                                ${data.address.trim() ? `<span><i class="fas fa-map-marker-alt"></i> ${data.address}</span>` : ''}
+                            </div>
+                            <div class="contacts" style="margin-top:5px; font-size:0.85rem;">${socialHTML}</div>
+                        </div>
+                        
+                        ${data.summary.trim() ? `<div class="section-head">${t.cv_profile}</div><p>${data.summary}</p>` : ''}
+
+                        ${data.experience.length > 0 ? `<div class="section-head">${t.cv_exp}</div>${renderEntriesProfessional(data.experience)}` : ''}
+
+                        ${data.education.length > 0 ? `<div class="section-head">${t.cv_edu}</div>${renderEntriesProfessional(data.education)}` : ''}
+
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+                            ${data.skills.trim() ? `
+                                <div><div class="section-head">${t.cv_skills}</div><div>${skillsHTML}</div></div>
+                            ` : ''}
+                            ${data.languages.length > 0 ? `
+                                <div><div class="section-head">${t.cv_lang}</div><div>${langHTML}</div></div>
+                            ` : ''}
+                        </div>
+                        
+                        ${data.hobbies.trim() ? `<div class="section-head">${t.cv_hobbies}</div><div style="margin-top:10px;">${hobbiesHTML}</div>` : ''}
+                    </div>`;
+            }
+        };
 
         function renderPreview() {
             const cv = document.getElementById('cv-paper');
@@ -837,122 +1263,14 @@
             cv.setAttribute('dir', config.lang === 'ar' ? 'rtl' : 'ltr');
             cv.style.setProperty('--theme-color', config.color);
             
-            const labels = { 
-                contact: t.cv_contact, 
-                skills: t.cv_skills, 
-                profile: t.cv_profile, 
-                exp: t.cv_exp, 
-                edu: t.cv_edu 
-            };
-
-            const photoHTML = data.photo ? `<img src="${data.photo}" class="profile-img cv-photo">` : '';
-            const skillsHTML = data.skills.split(/,|\n/).filter(s=>s.trim()).map(s => 
-                config.template === 'tmpl-creative' 
-                ? `<div class="skill-bar"><div class="skill-name">${s.trim()}</div><div class="bar-bg"><div class="bar-fill"></div></div></div>`
-                : `<span style="display:inline-block; background:#eee; padding:4px 10px; border-radius:4px; margin:3px; font-size:0.85rem; font-weight:500;">${s.trim()}</span>`
-            ).join('');
-
-            // --- Templates HTML ---
-            if (config.template === 'tmpl-modern') {
-                cv.innerHTML = `
-                    <div class="cv-content">
-                        <div class="sidebar-col">
-                            ${photoHTML}
-                            <h2>${labels.contact}</h2>
-                            <div class="contact-info">
-                                <div><i class="fas fa-envelope"></i> ${data.email}</div>
-                                <div><i class="fas fa-phone"></i> ${data.phone}</div>
-                                <div><i class="fas fa-map-marker-alt"></i> ${data.address}</div>
-                            </div>
-                            <h2>${labels.skills}</h2>
-                            <div style="display:flex; flex-wrap:wrap; gap:5px; color:#333;">${skillsHTML}</div>
-                        </div>
-                        <div class="main-col">
-                            <div class="main-header">
-                                <h1>${data.name}</h1>
-                                <div class="job-title">${data.jobTitle}</div>
-                            </div>
-                            <p style="margin-bottom:30px; line-height:1.6;">${data.summary}</p>
-                            <div class="section-head"><i class="fas fa-briefcase"></i> ${labels.exp}</div>
-                            ${renderEntries(data.experience)}
-                            <div class="section-head"><i class="fas fa-graduation-cap"></i> ${labels.edu}</div>
-                            ${renderEntries(data.education)}
-                        </div>
-                    </div>`;
-            } else if (config.template === 'tmpl-classic') {
-                cv.innerHTML = `
-                    <div class="cv-content">
-                        <div class="header">
-                            <h1>${data.name}</h1>
-                            <div class="job-title">${data.jobTitle}</div>
-                            <div class="contacts"><span>${data.email}</span> | <span>${data.phone}</span> | <span>${data.address}</span></div>
-                        </div>
-                        ${data.summary ? `<h3>${labels.profile}</h3><p>${data.summary}</p>` : ''}
-                        <h3>${labels.exp}</h3>${renderEntriesGrid(data.experience)}
-                        <h3>${labels.edu}</h3>${renderEntriesGrid(data.education)}
-                        <h3>${labels.skills}</h3><div>${skillsHTML}</div>
-                    </div>`;
-            } else if (config.template === 'tmpl-creative') {
-                cv.innerHTML = `
-                    <div class="cv-content">
-                        <div class="header">
-                            <div><h1>${data.name}</h1><div class="job-title">${data.jobTitle}</div></div>
-                            <div class="contacts">
-                                <div>${data.email} <i class="fas fa-envelope" style="color:var(--theme-color)"></i></div>
-                                <div>${data.phone} <i class="fas fa-phone" style="color:var(--theme-color)"></i></div>
-                                <div>${data.address} <i class="fas fa-map-marker-alt" style="color:var(--theme-color)"></i></div>
-                            </div>
-                        </div>
-                        <div class="grid-layout">
-                            <div class="main-side">
-                                <h3>${labels.profile}</h3><p style="margin-bottom:30px;">${data.summary}</p>
-                                <h3>${labels.exp}</h3>${renderEntries(data.experience)}
-                                <h3>${labels.edu}</h3>${renderEntries(data.education)}
-                            </div>
-                            <div class="side-bar">
-                                ${data.photo ? `<img src="${data.photo}" style="width:100%; margin-bottom:20px; border-radius:8px;">` : ''}
-                                <h3>${labels.skills}</h3>${skillsHTML}
-                            </div>
-                        </div>
-                    </div>`;
+            if (Templates[config.template]) {
+                cv.innerHTML = Templates[config.template](data, config, t);
+            } else {
+                cv.innerHTML = `<div>Template not found!</div>`;
             }
         }
-
-        function renderEntries(list) {
-            return list.map(item => `
-                <div class="entry">
-                    <div class="entry-sub"><span>${item.subtitle}</span><span>${item.date}</span></div>
-                    <div class="entry-title">${item.title}</div>
-                    <p>${item.desc.replace(/\n/g, '<br>')}</p>
-                </div>`).join('');
-        }
-        function renderEntriesGrid(list) {
-            return list.map(item => `
-                <div class="entry">
-                    <div class="date-col">${item.date}</div>
-                    <div class="main-col"><h4>${item.title}</h4><div class="sub">${item.subtitle}</div><p>${item.desc}</p></div>
-                </div>`).join('');
-        }
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            // Find the correct button to activate based on the target tabId
-            document.querySelectorAll('.tabs-nav .tab-btn').forEach(btn => {
-                const btnText = btn.innerText.toLowerCase();
-                if (
-                    (tabId === 'design' && (btnText.includes('design') || btnText.includes('التصميم'))) ||
-                    (tabId === 'info' && (btnText.includes('data') || btnText.includes('البيانات'))) ||
-                    (tabId === 'exp' && (btnText.includes('exp') || btnText.includes('الخبرات'))) ||
-                    (tabId === 'skills' && (btnText.includes('skills') || btnText.includes('المهارات'))) ||
-                    (tabId === 'settings' && (btnText.includes('settings') || btnText.includes('الإعدادات')))
-                ) {
-                    btn.classList.add('active');
-                }
-            });
-            
-            document.querySelectorAll('.tab-pane').forEach(p => p.style.display = 'none');
-            document.getElementById(`tab-${tabId}`).style.display = 'block';
-        }
-        function downloadPDF() { window.print(); }
+        
+        // --- Sample Data & Reset ---
         function resetData() { 
             if(confirm(translations[state.config.lang].btn_reset + '?')) { 
                 state = JSON.parse(JSON.stringify(defaultState)); 
@@ -962,18 +1280,39 @@
             } 
         }
         function loadSample() {
+            const currentLang = state.config.lang;
+            const t = translations[currentLang];
+            
             state.data = {
-                name: 'عبدالله العتيبي', jobTitle: 'مدير مشاريع', email: 'user@example.com', phone: '0551234567', address: 'الرياض',
-                summary: 'مدير مشاريع محترف مع خبرة واسعة في إدارة فرق العمل.', photo: null, skills: 'تخطيط, إدارة, تواصل, لغة إنجليزية',
-                experience: [{ id: 1, title: 'مدير مشروع', subtitle: 'شركة أرامكو', date: '2020 - الحالي', desc: 'إدارة مشاريع بقيمة 5 مليون ريال.' }],
-                education: [{ id: 2, title: 'ماجستير إدارة', subtitle: 'جامعة الملك سعود', date: '2019', desc: 'تخرج بامتياز.' }]
+                name: currentLang === 'ar' ? 'أحمد العيسى' : 'Ahmad Alessa', 
+                jobTitle: currentLang === 'ar' ? 'مهندس برمجيات أول' : 'Senior Software Engineer', 
+                email: 'ahmad.alessa@example.com', 
+                phone: '+966 50 123 4567', 
+                address: currentLang === 'ar' ? 'الرياض، المملكة العربية السعودية' : 'Riyadh, Saudi Arabia',
+                linkedin: 'https://linkedin.com/in/ahmadalessa', 
+                portfolio: 'https://alessa.dev',
+                summary: currentLang === 'ar' ? 'مهندس برمجيات شغوف بخبرة 7 سنوات في تطوير تطبيقات الويب عالية الأداء باستخدام أحدث تقنيات الـ Full Stack. متخصص في تصميم أنظمة قابلة للتوسع وحل المشكلات المعقدة.' : 'Passionate software engineer with 7 years of experience in developing high-performance full-stack web applications. Specialized in designing scalable systems and solving complex problems.', 
+                photo: null, // Keep photo null for basic sample
+                skills: currentLang === 'ar' ? 'بايثون, JavaScript, React, Node.js, AWS, Docker, العمل الجماعي, حل المشكلات' : 'Python, JavaScript, React, Node.js, AWS, Docker, Agile Methodology, Problem Solving',
+                hobbies: currentLang === 'ar' ? 'القراءة في التقنية، الشطرنج، التصميم الجرافيكي' : 'Tech Reading, Chess, Graphic Design',
+                experience: [
+                    { id: 1, title: currentLang === 'ar' ? 'مهندس برمجيات أول' : 'Senior Software Engineer', subtitle: currentLang === 'ar' ? 'شركة التقنية المتقدمة' : 'Advanced Tech Company', date: '2021 - Present', desc: currentLang === 'ar' ? 'قيادة فريق تطوير الواجهة الأمامية وتطوير ميزات جديدة أدت لزيادة مشاركة المستخدمين بنسبة 30%.' : 'Led a front-end development team and delivered new features that increased user engagement by 30%.' },
+                ],
+                education: [
+                    { id: 2, title: currentLang === 'ar' ? 'بكالوريوس علوم الحاسوب' : 'B.Sc. in Computer Science', subtitle: currentLang === 'ar' ? 'جامعة الملك فهد للبترول والمعادن' : 'King Fahd University of Petroleum and Minerals', date: '2017 - 2021', desc: currentLang === 'ar' ? 'المعدل التراكمي 3.8/4.0، تخصص رئيسي في الذكاء الاصطناعي.' : 'GPA 3.8/4.0, specialized in Artificial Intelligence.' }
+                ],
+                languages: [
+                    { id: 3, title: currentLang === 'ar' ? 'اللغة الإنجليزية' : 'English', level: currentLang === 'ar' ? 'ممتاز' : 'Excellent' }, 
+                    { id: 4, title: currentLang === 'ar' ? 'اللغة العربية' : 'Arabic', level: currentLang === 'ar' ? 'ممتاز' : 'Excellent' }
+                ]
             };
-            state.config.lang = 'ar';
+            state.config.lang = currentLang; 
             renderAll(); 
             saveAndRender();
-            updateInterfaceText(state.config.lang);
         }
+        
+        // Initial setup
+        switchTab('design');
     </script>
 </body>
 </html>
-
