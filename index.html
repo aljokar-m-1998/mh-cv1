@@ -222,7 +222,7 @@
         
         /* --- CV Template Specific Styles for Print/Output --- */
         
-        /* (Template styles are unchanged from previous version, kept for brevity) */
+        /* Template Modern */
         .tmpl-modern .cv-content { display: grid; grid-template-columns: 32% 68%; min-height: 297mm; }
         .tmpl-modern .sidebar-col { background: var(--theme-color); color: white; padding: 30px; }
         .tmpl-modern .main-col { padding: 30px; }
@@ -232,7 +232,10 @@
         .tmpl-modern .section-head { font-size: 1.3rem; font-weight: 700; margin: 30px 0 15px; padding-bottom: 5px; border-bottom: 2px solid #ccc; color: #222; }
         .tmpl-modern .entry-title { font-weight: 600; font-size: 1.1rem; margin: 5px 0; }
         .tmpl-modern .entry-sub { display: flex; justify-content: space-between; font-size: 0.9rem; color: #555; font-style: italic; }
+        /* Photo style for modern */
+        .tmpl-modern .cv-photo { width: 140px; height: 140px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.2); margin-bottom: 25px; display: block; object-fit: cover; }
 
+        /* Template Professional */
         .tmpl-professional .header { text-align: center; padding: 20px 40px 10px; border-bottom: 4px solid var(--theme-color); }
         .tmpl-professional h1 { font-size: 2.2rem; margin-bottom: 5px; }
         .tmpl-professional .job-title { font-size: 1.2rem; margin-bottom: 10px; color: #555; }
@@ -241,7 +244,11 @@
         .tmpl-professional .cv-content { padding: 0 40px 40px; }
         .tmpl-professional .skill-tag { display: inline-block; background: #eee; padding: 5px 10px; border-radius: 4px; margin: 4px; font-size: 0.9rem; border: 1px solid #ddd; }
         .tmpl-professional .entry-sub { display: flex; justify-content: space-between; font-size: 0.9rem; color: #555; }
+        /* Photo style for professional */
+        .tmpl-professional .cv-photo { width: 100px; height: 100px; border-radius: 50%; margin: 10px auto 10px; display: block; object-fit: cover; border: 3px solid #ccc;}
 
+
+        /* Template Classic */
         .tmpl-classic .header { padding: 20px 40px; text-align: center; }
         .tmpl-classic .cv-content { padding: 0 40px 40px; }
         .tmpl-classic h3 { font-size: 1.5rem; margin-top: 25px; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 2px solid var(--theme-color); color: var(--theme-color); }
@@ -249,7 +256,11 @@
         .tmpl-classic .date-col { font-weight: 600; font-size: 0.95rem; color: #555; }
         .tmpl-classic .main-col h4 { font-size: 1.1rem; margin-bottom: 2px; }
         .tmpl-classic .main-col .sub { font-style: italic; color: #777; margin-bottom: 5px; font-size: 0.95rem; }
+        /* Photo style for classic */
+        .tmpl-classic .cv-photo { width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 15px; display: block; object-fit: cover; border: 1px solid #ddd;}
 
+
+        /* Template Creative */
         .tmpl-creative .header { display: flex; justify-content: space-between; align-items: center; padding: 30px 40px; border-top: 10px solid var(--theme-color); border-bottom: 1px solid #ccc; }
         .tmpl-creative .grid-layout { display: grid; grid-template-columns: 70% 30%; padding: 20px 40px; gap: 30px; }
         .tmpl-creative h3 { font-size: 1.3rem; margin-top: 20px; margin-bottom: 10px; color: var(--theme-color); }
@@ -258,6 +269,9 @@
         .tmpl-creative .skill-name { font-size: 0.9rem; font-weight: 500; margin-bottom: 3px; }
         .tmpl-creative .bar-bg { background: #ddd; height: 6px; border-radius: 3px; overflow: hidden; }
         .tmpl-creative .bar-fill { height: 100%; background: var(--theme-color); }
+        /* Photo style for creative */
+        .tmpl-creative .cv-photo { width:100%; margin-bottom:20px; border-radius:8px; object-fit:cover; aspect-ratio:1/1;}
+
 
         /* --- Print/PDF Output Optimization --- */
         @media print {
@@ -734,33 +748,47 @@
             state.data[key] = input.value;
             saveAndRender();
         }
-
+        
+        // **********************************************
+        // ******* FIX: Image Upload & Management *******
+        // **********************************************
+        
         function handleImageUpload(input) {
             const file = input.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = (e) => { state.data.photo = e.target.result; saveAndRender(); updatePhotoButton(); };
+                reader.onload = (e) => { 
+                    state.data.photo = e.target.result; 
+                    saveAndRender(); 
+                    updatePhotoButton(); // Update button visibility on success
+                };
                 reader.readAsDataURL(file);
             }
         }
+        
         function removePhoto() {
             state.data.photo = null;
-            document.getElementById('photo-file-input').value = '';
-            updatePhotoButton(); // NEW: Update button visibility immediately
+            document.getElementById('photo-file-input').value = ''; // Reset file input
+            updatePhotoButton(); 
             saveAndRender();
         }
         
-        // NEW: Function to control the visibility of the remove photo button
         function updatePhotoButton() {
             const btn = document.getElementById('btn-remove-photo');
             const t = translations[state.config.lang];
-            if (state.data.photo) {
-                btn.style.display = 'block';
-                btn.innerText = t.btn_remove_photo;
-            } else {
-                btn.style.display = 'none';
+            
+            if (btn) { // Check if the button exists
+                btn.innerText = t.btn_remove_photo; // Set text based on language
+                if (state.data.photo) {
+                    btn.style.display = 'block';
+                } else {
+                    btn.style.display = 'none';
+                }
             }
         }
+        // **********************************************
+        // **********************************************
+
 
         function toggleDarkMode(isDark) {
             state.config.darkMode = isDark;
@@ -785,7 +813,10 @@
         function addItem(type) {
             const id = Date.now();
             let newItem = { id, title: '', subtitle: '', date: '', desc: '' };
-            if (type === 'languages') { newItem = { id, title: '', level: translations[state.config.lang].ph_lang_subtitle === 'Level' ? 'Excellent' : 'ممتاز' }; }
+            if (type === 'languages') { 
+                const t = translations[state.config.lang];
+                newItem = { id, title: '', level: t.ph_lang_subtitle === 'Level' ? 'Excellent' : 'ممتاز' }; 
+            }
             
             state.data[type].unshift(newItem); 
             
@@ -906,7 +937,7 @@
             setTemplate(state.config.template);
             
             renderFormLists();
-            updatePhotoButton(); // NEW: Update button visibility on initial load
+            updatePhotoButton(); // Update button visibility on initial load
             saveAndRender(); 
         }
         
@@ -1082,6 +1113,7 @@
         function renderSkills(data, config, isCreative=false) {
             return data.skills.split(/,|\n/).filter(s=>s.trim()).map(s => {
                 if (isCreative) {
+                    // Simplified fixed skill bar for demo purpose
                     const fillStyle = 'width: 85%;'; 
                     return `<div class="skill-bar"><div class="skill-name">${s.trim()}</div><div class="bar-bg"><div class="bar-fill" style="${fillStyle} background: var(--theme-color);"></div></div></div>`;
                 } else if (config.template === 'tmpl-professional') {
@@ -1118,7 +1150,8 @@
         // --- Template Definitions ---
         const Templates = {
             'tmpl-modern': (data, config, t) => {
-                const photoHTML = data.photo ? `<img src="${data.photo}" class="profile-img cv-photo" style="width: 140px; height: 140px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.2); margin-bottom: 25px; display: block; object-fit: cover;">` : '';
+                // *FIXED: Uses data.photo directly in the template definition
+                const photoHTML = data.photo ? `<img src="${data.photo}" class="profile-img cv-photo">` : ''; 
                 const skillsHTML = renderSkills(data, config);
                 const langHTML = renderLanguages(data.languages, config.lang);
                 const hobbiesHTML = renderHobbies(data);
@@ -1152,6 +1185,8 @@
                     </div>`;
             },
             'tmpl-classic': (data, config, t) => {
+                // *FIXED: Added photo support for Classic template
+                const photoHTML = data.photo ? `<img src="${data.photo}" class="cv-photo">` : ''; 
                 const skillsHTML = renderSkills(data, config);
                 const hobbiesHTML = renderHobbies(data);
                 const langHTML = renderLanguagesProfessional(data.languages, config.lang);
@@ -1160,6 +1195,7 @@
                 return `
                     <div class="cv-content tmpl-classic">
                         <div class="header">
+                            ${photoHTML}
                             <h1>${data.name}</h1>
                             <div class="job-title">${data.jobTitle}</div>
                             <div class="contacts">
@@ -1184,6 +1220,8 @@
                     </div>`;
             },
             'tmpl-creative': (data, config, t) => {
+                // *FIXED: Uses data.photo directly in the template definition
+                const photoHTML = data.photo ? `<img src="${data.photo}" class="cv-photo">` : '';
                 const skillsHTML = renderSkills(data, config, true); 
                 const hobbiesHTML = renderHobbies(data);
                 const langHTML = renderLanguagesProfessional(data.languages, config.lang);
@@ -1207,7 +1245,7 @@
                                 ${data.hobbies.trim() ? `<h3>${t.cv_hobbies}</h3><div style="margin-top:10px;">${hobbiesHTML}</div>` : ''}
                             </div>
                             <div class="side-bar">
-                                ${data.photo ? `<img src="${data.photo}" style="width:100%; margin-bottom:20px; border-radius:8px; object-fit:cover; aspect-ratio:1/1;">` : ''}
+                                ${photoHTML}
                                 ${data.linkedin.trim() || data.portfolio.trim() ? `<h3>${t.cv_social}</h3>${socialHTML}` : ''}
                                 ${data.skills.trim() ? `<h3>${t.cv_skills}</h3>${renderSkills(data, config, true)}` : ''}
                                 ${data.languages.length > 0 ? `<h3>${t.cv_lang}</h3><div>${langHTML}</div>` : ''}
@@ -1216,6 +1254,8 @@
                     </div>`;
             },
             'tmpl-professional': (data, config, t) => {
+                // *FIXED: Added photo support for Professional template
+                const photoHTML = data.photo ? `<img src="${data.photo}" class="cv-photo">` : '';
                 const skillsHTML = renderSkills(data, config);
                 const langHTML = renderLanguagesProfessional(data.languages, config.lang);
                 const hobbiesHTML = renderHobbies(data);
@@ -1224,6 +1264,7 @@
                 return `
                     <div class="cv-content tmpl-professional">
                         <div class="header">
+                            ${photoHTML}
                             <h1>${data.name}</h1>
                             <div class="job-title">${data.jobTitle}</div>
                             <div class="contacts">
@@ -1274,6 +1315,8 @@
         function resetData() { 
             if(confirm(translations[state.config.lang].btn_reset + '?')) { 
                 state = JSON.parse(JSON.stringify(defaultState)); 
+                // Ensure default config is set for the interface before renderAll
+                state.config.lang = document.getElementById('langSelect').value;
                 renderAll(); 
                 saveAndRender(); 
                 updateInterfaceText(state.config.lang);
@@ -1292,7 +1335,8 @@
                 linkedin: 'https://linkedin.com/in/ahmadalessa', 
                 portfolio: 'https://alessa.dev',
                 summary: currentLang === 'ar' ? 'مهندس برمجيات شغوف بخبرة 7 سنوات في تطوير تطبيقات الويب عالية الأداء باستخدام أحدث تقنيات الـ Full Stack. متخصص في تصميم أنظمة قابلة للتوسع وحل المشكلات المعقدة.' : 'Passionate software engineer with 7 years of experience in developing high-performance full-stack web applications. Specialized in designing scalable systems and solving complex problems.', 
-                photo: null, // Keep photo null for basic sample
+                // Sample image data (a very small placeholder base64 image for testing)
+                photo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2NkYGDYDwAAAwADF+sA+gAAAABJRU5ErkJggg==', 
                 skills: currentLang === 'ar' ? 'بايثون, JavaScript, React, Node.js, AWS, Docker, العمل الجماعي, حل المشكلات' : 'Python, JavaScript, React, Node.js, AWS, Docker, Agile Methodology, Problem Solving',
                 hobbies: currentLang === 'ar' ? 'القراءة في التقنية، الشطرنج، التصميم الجرافيكي' : 'Tech Reading, Chess, Graphic Design',
                 experience: [
